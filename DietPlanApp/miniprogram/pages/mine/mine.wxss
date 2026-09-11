@@ -1,0 +1,14 @@
+.profile { display: flex; align-items: center; background: #1565C0; padding: 48rpx 32rpx; color: #fff; }
+.avatar { width: 100rpx; height: 100rpx; border-radius: 50%; background: rgba(255,255,255,.25); text-align: center; line-height: 100rpx; font-size: 44rpx; margin-right: 24rpx; }
+.nick { font-size: 34rpx; font-weight: 700; }
+.sub { font-size: 22rpx; opacity: .8; margin-top: 6rpx; }
+.stats { display: flex; background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 28rpx 0; }
+.stat { flex: 1; text-align: center; }
+.num { font-size: 44rpx; font-weight: 700; color: #1565C0; }
+.lbl { color: #757575; font-size: 22rpx; margin-top: 6rpx; }
+.card { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 24rpx; }
+.card-title { font-weight: 700; margin-bottom: 16rpx; }
+.cal { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.cal-day { background: #f0f2f5; border-radius: 12rpx; padding: 10rpx 14rpx; text-align: center; }
+.cal-date { font-size: 22rpx; color: #616161; }
+.cal-count { font-size: 22rpx; color: #1565C0; font-weight: 700; }

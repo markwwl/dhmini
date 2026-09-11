@@ -1,0 +1,1 @@
+<video wx:if="{{src}}" src="{{src}}" style="width:100%;height:420rpx" controls autoplay/>

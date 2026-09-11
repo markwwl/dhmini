@@ -1,0 +1,4 @@
+detected_doc_type: "软件开发需求文档"
+target_length: 4000
+target_tone: "正式、结构化、面向开发与干系人"
+notes: "素材来源：用户提供的 4 张小程序截图（方案列表/每日食谱/制作解析/更换菜品）+ 已确认技术决策（微信原生、ASP.NET Core 8 + SQL Server、打卡记录+统计、微信授权登录）。纯内部素材创作，Phase 2 研究跳过。"

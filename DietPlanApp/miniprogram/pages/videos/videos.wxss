@@ -1,0 +1,4 @@
+.vcard { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; overflow: hidden; }
+.vcover { width: 100%; height: 360rpx; background: #f0f2f5; }
+.vtitle { padding: 20rpx; font-weight: 600; }
+.empty { text-align: center; color: #999; padding-top: 200rpx; }

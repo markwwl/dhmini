@@ -1,0 +1,12 @@
+.wrap { display: flex; }
+.nav { width: 140rpx; background: #fff; padding-top: 20rpx; position: sticky; top: 0; height: 100vh; box-sizing: border-box; }
+.nav-item { padding: 24rpx 0; text-align: center; font-size: 24rpx; color: #616161; border-left: 6rpx solid transparent; }
+.nav-item-active { color: #1565C0; border-left-color: #1565C0; font-weight: 700; }
+.stage-title { font-size: 32rpx; font-weight: 700; margin: 32rpx 24rpx 8rpx 180rpx; }
+.week-card { display: flex; background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx 16rpx 180rpx; overflow: hidden; }
+.week-cover { width: 220rpx; height: 180rpx; background: #eef4fb; }
+.week-info { flex: 1; padding: 20rpx; }
+.week-label { background: #1565C0; color: #fff; display: inline-block; font-size: 22rpx; border-radius: 20rpx; padding: 2rpx 16rpx; }
+.week-theme { font-weight: 600; margin-top: 12rpx; }
+.week-go { color: #1565C0; font-size: 24rpx; margin-top: 12rpx; }
+.empty { text-align: center; color: #999; padding-top: 200rpx; }

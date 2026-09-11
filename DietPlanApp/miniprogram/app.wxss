@@ -1,0 +1,5 @@
+/* 全局样式 */
+page { background: #f6f7fb; font-size: 28rpx; color: #212121; }
+.card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin: 16rpx 24rpx; }
+.btn-primary { background: #1565C0; color: #fff; border-radius: 40rpx; font-size: 28rpx; }
+.tag-checked { background: #e8f5e9; color: #2e7d32; border-radius: 20rpx; font-size: 22rpx; padding: 4rpx 16rpx; }

@@ -1,0 +1,15 @@
+.search-bar { display: flex; align-items: center; background: #fff; padding: 16rpx 24rpx; gap: 16rpx; }
+.search-input { flex: 1; background: #f0f2f5; border-radius: 32rpx; padding: 12rpx 24rpx; font-size: 26rpx; }
+.search-btn { background: #1565C0; color: #fff; }
+.tip { color: #999; font-size: 22rpx; margin: 16rpx 32rpx; }
+.cand { display: flex; align-items: flex-start; background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 20rpx; border: 2rpx solid transparent; }
+.cand-active { border-color: #1565C0; background: #f3f8ff; }
+.radio { color: #1565C0; font-size: 32rpx; margin-right: 16rpx; }
+.cand-img { width: 140rpx; height: 140rpx; border-radius: 12rpx; background: #f0f2f5; flex-shrink: 0; }
+.cand-info { flex: 1; margin-left: 20rpx; }
+.cand-name { font-weight: 600; }
+.current-tag { background: #e8f5e9; color: #2e7d32; font-size: 20rpx; border-radius: 16rpx; padding: 2rpx 12rpx; margin-left: 8rpx; }
+.cand-ing { color: #757575; font-size: 24rpx; margin: 8rpx 0; }
+.cand-link { color: #1565C0; font-size: 24rpx; }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); }
+.confirm-btn { background: #1565C0; color: #fff; border-radius: 40rpx; font-size: 30rpx; }

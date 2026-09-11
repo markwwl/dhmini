@@ -1,0 +1,18 @@
+<view wx:if="{{plan}}" class="wrap">
+  <view class="nav">
+    <view wx:for="{{stages}}" wx:key="id" class="nav-item {{activeStage === index ? 'nav-item-active' : ''}}" data-idx="{{index}}" bindtap="tapStage">{{item.name}}</view>
+  </view>
+
+  <block wx:for="{{stages}}" wx:for-item="stage" wx:key="id">
+    <view id="stage-{{index}}" class="stage-title">{{stage.name}} · {{stage.theme}}</view>
+    <view class="week-card" wx:for="{{stage.weeks}}" wx:for-item="w" wx:key="id" data-week-id="{{w.id}}" data-daycount="{{w.dayCount}}" data-stage="{{stage.name}} {{stage.theme}}" data-label="{{w.label}}" bindtap="goDay">
+      <image class="week-cover" src="{{w.coverImage}}" mode="aspectFill"/>
+      <view class="week-info">
+        <view class="week-label">{{w.label}}</view>
+        <view class="week-theme">{{w.theme}}</view>
+        <view class="week-go">查看方案 ›</view>
+      </view>
+    </view>
+  </block>
+</view>
+<view wx:else class="empty">暂无上线方案</view>

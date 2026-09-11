@@ -1,0 +1,34 @@
+<view wx:if="{{dish}}">
+  <swiper autoplay circular indicator-dots wx:if="{{dish.images.length}}" style="height:480rpx">
+    <swiper-item wx:for="{{dish.images}}" wx:key="*this">
+      <image src="{{item}}" mode="aspectFill" style="width:100%;height:480rpx"/>
+    </swiper-item>
+  </swiper>
+
+  <view class="head">
+    <view>
+      <view class="name">{{dish.name}}</view>
+      <view class="sub">{{dish.subtitle}}</view>
+    </view>
+    <view class="like {{liked ? 'liked' : ''}}" bindtap="toggleLike">{{liked ? '♥ 已喜欢' : '♡ 喜欢这道菜'}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">食材清单（{{dish.category}}）</view>
+    <view class="ing" wx:for="{{dish.ingredients}}" wx:key="index">
+      <text>{{item.name}}</text><text class="amount">{{item.amount}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">制作步骤</view>
+    <view class="step" wx:for="{{dish.steps}}" wx:key="index">
+      <view class="step-no">{{index + 1}}</view>
+      <view class="step-body">
+        <text>{{item.text}}</text>
+        <image wx:if="{{item.image}}" src="{{item.image}}" mode="widthFix" class="step-img"/>
+      </view>
+    </view>
+  </view>
+</view>
+<view wx:else class="empty">加载中…</view>

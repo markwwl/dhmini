@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>健康饮食方案 · 管理后台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/index.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/index.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/locale/zh-cn.min.js"></script>
+<style>
+body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7fa; }
+.login-box { width: 360px; margin: 15vh auto; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 200px; background: #1d2b3a; color: #fff; padding-top: 16px; flex-shrink: 0; }
+.sidebar .logo { text-align: center; font-weight: 700; padding: 12px 0 20px; letter-spacing: 1px; }
+.menu-item { padding: 13px 22px; cursor: pointer; color: #b8c4cf; font-size: 14px; }
+.menu-item:hover { background: #27394d; color: #fff; }
+.menu-item.active { background: #1565C0; color: #fff; }
+.main { flex: 1; padding: 20px 24px; overflow-x: auto; }
+.toolbar { margin-bottom: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.pager { margin-top: 12px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- 登录 -->
+  <div v-if="!token" class="login-box">
+    <h2 style="text-align:center;margin-top:0">健康饮食方案 · 管理后台</h2>
+    <el-form @submit.prevent>
+      <el-form-item><el-input v-model="login.username" placeholder="用户名" /></el-form-item>
+      <el-form-item><el-input v-model="login.password" type="password" placeholder="密码" show-password /></el-form-item>
+      <el-button type="primary" style="width:100%" :loading="login.loading" @click="doLogin">登 录</el-button>
+    </el-form>
+  </div>
+
+  <!-- 主界面 -->
+  <div v-else class="layout">
+    <div class="sidebar">
+      <div class="logo">均衡抗炎 · 后台</div>
+      <div v-for="m in menus" :key="m.key" class="menu-item" :class="{active: view===m.key}" @click="view=m.key">{{ m.label }}</div>
+      <div class="menu-item" @click="logout">退出登录</div>
+    </div>
+    <div class="main">
+
+      <!-- 方案管理（含阶段/周/天/槽位四级钻取） -->
+      <div v-if="view==='plans'">
+        <div class="toolbar">
+          <el-button type="primary" @click="openPlan()">新建方案</el-button>
+          <el-button @click="loadPlans">刷新</el-button>
+          <span v-if="planNav.plan" style="color:#909399;font-size:13px">
+            当前：{{ planNav.plan.name }} → {{ planNav.stage ? planNav.stage.name : '阶段列表' }}
+            <template v-if="planNav.stage"> → {{ planNav.week ? planNav.week.label : '周列表' }}</template>
+          </span>
+        </div>
+
+        <!-- 层1：方案列表 -->
+        <el-table v-if="!planNav.stage" :data="plans" border>
+          <el-table-column prop="id" label="ID" width="60"/>
+          <el-table-column prop="name" label="方案名"/>
+          <el-table-column prop="intro" label="简介" show-overflow-tooltip/>
+          <el-table-column prop="sort" label="排序" width="70"/>
+          <el-table-column label="状态" width="90">
+            <template #default="{row}"><el-tag :type="row.status===1?'success':'info'">{{ ['草稿','上线','下线'][row.status] }}</el-tag></template>
+          </el-table-column>
+          <el-table-column label="操作" width="220">
+            <template #default="{row}">
+              <el-button size="small" @click="openPlan(row)">编辑</el-button>
+              <el-button size="small" type="primary" @click="intoStages(row)">阶段 ›</el-button>
+              <el-button size="small" type="danger" @click="delPlan(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 层2：阶段 -->
+        <template v-else-if="!planNav.week">
+          <div class="toolbar"><el-button type="primary" @click="openStage()">新建阶段</el-button><el-button @click="backToPlans">‹ 返回方案</el-button></div>
+          <el-table :data="stages" border>
+            <el-table-column prop="name" label="阶段名" width="140"/>
+            <el-table-column prop="theme" label="主题"/>
+            <el-table-column prop="sort" label="排序" width="70"/>
+            <el-table-column label="操作" width="220">
+              <template #default="{row}">
+                <el-button size="small" @click="openStage(row)">编辑</el-button>
+                <el-button size="small" type="primary" @click="intoWeeks(row)">周 ›</el-button>
+                <el-button size="small" type="danger" @click="delStage(row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+
+        <!-- 层3：周 -->
+        <template v-else-if="!planNav.day">
+          <div class="toolbar"><el-button type="primary" @click="openWeek()">新建周</el-button><el-button @click="backToStages">‹ 返回阶段</el-button></div>
+          <el-table :data="weeks" border>
+            <el-table-column prop="label" label="周标签" width="110"/>
+            <el-table-column prop="theme" label="周主题"/>
+            <el-table-column prop="sort" label="排序" width="70"/>
+            <el-table-column label="操作" width="220">
+              <template #default="{row}">
+                <el-button size="small" @click="openWeek(row)">编辑</el-button>
+                <el-button size="small" type="primary" @click="intoDays(row)">天 ›</el-button>
+                <el-button size="small" type="danger" @click="delWeek(row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+
+        <!-- 层4：天 + 餐次槽位 + 菜品槽位 -->
+        <template v-else>
+          <div class="toolbar">
+            <el-button type="primary" @click="addDay">新建天（默认三餐）</el-button>
+            <el-button @click="backToWeeks">‹ 返回周</el-button>
+          </div>
+          <el-table :data="days" border>
+            <el-table-column prop="dayNo" label="天" width="70"/>
+            <el-table-column label="三餐及菜品槽位">
+              <template #default="{row}">
+                <div v-for="m in row.mealSlots" :key="m.id" style="margin-bottom:6px">
+                  <el-tag size="small">{{ mealName(m.mealType) }}</el-tag>
+                  <el-tag v-for="i in m.dishItems" :key="i.id" size="small" type="info" style="margin-left:4px">{{ dishName(i.dishId) }} <span v-if="i.candidateGroupId">(候选组{{ i.candidateGroupId }})</span></el-tag>
+                  <el-button size="small" link type="primary" @click="openSlotItem(row, m)">+菜品槽位</el-button>
+                  <el-button v-for="i in m.dishItems" :key="'d'+i.id" size="small" link type="danger" @click="delSlotItem(i)">删{{ i.id }}</el-button>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="90">
+              <template #default="{row}"><el-button size="small" type="danger" @click="delDay(row)">删除</el-button></template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </div>
+
+      <!-- 菜品管理 -->
+      <div v-if="view==='dishes'">
+        <div class="toolbar">
+          <el-input v-model="dishKw" placeholder="关键字" style="width:180px" clearable @keyup.enter="loadDishes"/>
+          <el-button type="primary" @click="loadDishes">搜索</el-button>
+          <el-button @click="openDish()">新建菜品</el-button>
+        </div>
+        <el-table :data="dishes" border>
+          <el-table-column prop="id" label="ID" width="60"/>
+          <el-table-column prop="name" label="菜名" width="140"/>
+          <el-table-column prop="subtitle" label="副标题" width="140" show-overflow-tooltip/>
+          <el-table-column prop="category" label="分类" width="90"/>
+          <el-table-column prop="ingredientsJson" label="食材JSON" show-overflow-tooltip/>
+          <el-table-column label="状态" width="90">
+            <template #default="{row}"><el-tag :type="row.status===1?'success':'info'">{{ ['草稿','已发布','下架'][row.status] }}</el-tag></template>
+          </el-table-column>
+          <el-table-column label="操作" width="140">
+            <template #default="{row}">
+              <el-button size="small" @click="openDish(row)">编辑</el-button>
+              <el-button size="small" type="danger" @click="delDish(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <!-- 候选组 -->
+      <div v-if="view==='groups'">
+        <div class="toolbar"><el-button type="primary" @click="openGroup()">新建候选组</el-button><el-button @click="loadGroups">刷新</el-button></div>
+        <el-table :data="groups" border>
+          <el-table-column prop="id" label="ID" width="60"/>
+          <el-table-column prop="name" label="组名" width="160"/>
+          <el-table-column label="成员菜品">
+            <template #default="{row}"><el-tag v-for="i in row.items" :key="i.id" size="small" style="margin-right:4px">{{ dishName(i.dishId) }}</el-tag></template>
+          </el-table-column>
+          <el-table-column label="操作" width="140">
+            <template #default="{row}">
+              <el-button size="small" @click="openGroup(row)">编辑</el-button>
+              <el-button size="small" type="danger" @click="delGroup(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <!-- 内容块 -->
+      <div v-if="view==='blocks'">
+        <div class="toolbar">
+          <el-select v-model="blockType" style="width:120px" @change="loadBlocks">
+            <el-option label="banner" value="banner"/><el-option label="资讯" value="article"/><el-option label="视频" value="video"/>
+          </el-select>
+          <el-button type="primary" @click="openBlock()">新建</el-button>
+        </div>
+        <el-table :data="blocks" border>
+          <el-table-column prop="id" label="ID" width="60"/>
+          <el-table-column prop="title" label="标题"/>
+          <el-table-column prop="image" label="图片" show-overflow-tooltip/>
+          <el-table-column prop="url" label="链接" show-overflow-tooltip/>
+          <el-table-column prop="sort" label="排序" width="70"/>
+          <el-table-column label="启用" width="70"><template #default="{row}">{{ row.enabled ? '是' : '否' }}</template></el-table-column>
+          <el-table-column label="操作" width="140">
+            <template #default="{row}">
+              <el-button size="small" @click="openBlock(row)">编辑</el-button>
+              <el-button size="small" type="danger" @click="delBlock(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <!-- 统计 -->
+      <div v-if="view==='stats'">
+        <el-row :gutter="16" style="margin-bottom:16px">
+          <el-col :span="8"><el-card><el-statistic title="注册用户" :value="overview.users || 0"/></el-card></el-col>
+          <el-col :span="8"><el-card><el-statistic title="打卡总人次" :value="overview.totalCheckins || 0"/></el-card></el-col>
+          <el-col :span="8"><el-card><el-statistic title="今日打卡人次" :value="overview.todayCheckins || 0"/></el-card></el-col>
+        </el-row>
+        <div class="toolbar">
+          <el-date-picker v-model="statRange" type="daterange" value-format="YYYY-MM-DD" start-placeholder="开始" end-placeholder="结束" @change="loadCheckinStats"/>
+          <el-button @click="exportStats">导出 CSV</el-button>
+        </div>
+        <el-table :data="checkinStats" border>
+          <el-table-column prop="date" label="日期" width="120"/>
+          <el-table-column prop="checkins" label="打卡人次"/>
+          <el-table-column prop="users" label="打卡人数"/>
+          <el-table-column prop="rate" label="打卡率(%)"/>
+        </el-table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用编辑对话框 -->
+  <el-dialog v-model="dlg.show" :title="dlg.title" width="640px">
+    <el-form label-width="90px">
+      <template v-if="dlg.type==='plan'">
+        <el-form-item label="方案名"><el-input v-model="dlg.data.name"/></el-form-item>
+        <el-form-item label="简介"><el-input v-model="dlg.data.intro" type="textarea"/></el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"/><el-option label="上线" :value="1"/><el-option label="下线" :value="2"/></el-select>
+        </el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='stage'">
+        <el-form-item label="阶段名"><el-input v-model="dlg.data.name"/></el-form-item>
+        <el-form-item label="主题"><el-input v-model="dlg.data.theme"/></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="详情富文本"><el-input v-model="dlg.data.detailRichText" type="textarea" :rows="4"/></el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='week'">
+        <el-form-item label="周标签"><el-input v-model="dlg.data.label" placeholder="第1周"/></el-form-item>
+        <el-form-item label="周主题"><el-input v-model="dlg.data.theme"/></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="背景图">
+          <input type="file" @change="e => upload(e, v => dlg.data.coverImage = v)"/>
+          <el-input v-model="dlg.data.coverImage" placeholder="或直接填图片URL"/>
+        </el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='dish'">
+        <el-form-item label="菜名"><el-input v-model="dlg.data.name"/></el-form-item>
+        <el-form-item label="副标题"><el-input v-model="dlg.data.subtitle"/></el-form-item>
+        <el-form-item label="分类"><el-input v-model="dlg.data.category" placeholder="主食/荤菜/素菜/汤品"/></el-form-item>
+        <el-form-item label="图片JSON"><el-input v-model="dlg.data.imagesJson" type="textarea" :rows="2" placeholder='["http://..."]'/></el-form-item>
+        <el-form-item label="食材JSON"><el-input v-model="dlg.data.ingredientsJson" type="textarea" :rows="3" placeholder='[{"name":"黑米","amount":"20g"}]'/></el-form-item>
+        <el-form-item label="步骤JSON"><el-input v-model="dlg.data.stepsJson" type="textarea" :rows="3" placeholder='[{"text":"淘洗黑米"}]'/></el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"/><el-option label="已发布" :value="1"/><el-option label="下架" :value="2"/></el-select>
+        </el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='group'">
+        <el-form-item label="组名"><el-input v-model="dlg.data.name"/></el-form-item>
+        <el-form-item label="成员菜品ID">
+          <el-select v-model="dlg.dishIds" multiple filterable style="width:100%">
+            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"/>
+          </el-select>
+        </el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='block'">
+        <el-form-item label="标题"><el-input v-model="dlg.data.title"/></el-form-item>
+        <el-form-item label="图片">
+          <input type="file" @change="e => upload(e, v => dlg.data.image = v)"/>
+          <el-input v-model="dlg.data.image"/>
+        </el-form-item>
+        <el-form-item label="链接"><el-input v-model="dlg.data.url"/></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="启用"><el-switch v-model="dlg.data.enabled"/></el-form-item>
+      </template>
+      <template v-else-if="dlg.type==='slotitem'">
+        <el-form-item label="菜品">
+          <el-select v-model="dlg.data.dishId" filterable style="width:100%">
+            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="候选组">
+          <el-select v-model="dlg.data.candidateGroupId" clearable style="width:100%">
+            <el-option v-for="g in groups" :key="g.id" :label="g.id + ' ' + g.name" :value="g.id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+      </template>
+    </el-form>
+    <template #footer>
+      <el-button @click="dlg.show=false">取消</el-button>
+      <el-button type="primary" @click="saveDlg">保存</el-button>
+    </template>
+  </el-dialog>
+</div>
+
+<script>
+const { createApp, reactive, ref, toRefs } = Vue;
+
+const app = createApp({
+  setup() {
+    const token = ref(localStorage.getItem('token') || '');
+    const view = ref('plans');
+    const login = reactive({ username: 'admin', password: '', loading: false });
+    const menus = [
+      { key: 'plans', label: '方案管理' },
+      { key: 'dishes', label: '菜品管理' },
+      { key: 'groups', label: '候选组' },
+      { key: 'blocks', label: '内容块' },
+      { key: 'stats', label: '打卡统计' }
+    ];
+
+    // ---------- API 封装 ----------
+    async function api(path, method = 'GET', body) {
+      const opt = { method, headers: { 'Authorization': 'Bearer ' + token.value } };
+      if (body !== undefined) { opt.headers['Content-Type'] = 'application/json'; opt.body = JSON.stringify(body); }
+      const resp = await fetch(path, opt);
+      if (resp.status === 401) { token.value = ''; localStorage.removeItem('token'); throw new Error('登录已过期'); }
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(msg.replace(/["{}]/g, '').slice(0, 120) || ('HTTP ' + resp.status));
+      }
+      return resp.json();
+    }
+    const notifyError = e => ElementPlus.ElMessage.error(String(e.message || e));
+
+    // ---------- 登录 ----------
+    async function doLogin() {
+      login.loading = true;
+      try {
+        const resp = await fetch('/api/admin/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: login.username, password: login.password }) });
+        if (!resp.ok) throw new Error('用户名或密码错误');
+        const data = await resp.json();
+        token.value = data.token;
+        localStorage.setItem('token', data.token);
+        ElementPlus.ElMessage.success('登录成功');
+        loadAll();
+      } catch (e) { notifyError(e); } finally { login.loading = false; }
+    }
+    function logout() { token.value = ''; localStorage.removeItem('token'); }
+
+    // ---------- 通用对话框 ----------
+    const dlg = reactive({ show: false, title: '', type: '', data: {}, dishIds: [], ctx: {} });
+
+    // ---------- 方案四级钻取 ----------
+    const plans = ref([]); const stages = ref([]); const weeks = ref([]); const days = ref([]);
+    const planNav = reactive({ plan: null, stage: null, week: null, day: null });
+    async function loadPlans() { try { plans.value = await api('/api/admin/plans'); } catch (e) { notifyError(e); } }
+    async function loadStages() { try { stages.value = await api('/api/admin/stages?planId=' + planNav.plan.id); } catch (e) { notifyError(e); } }
+    async function loadWeeks() { try { weeks.value = await api('/api/admin/weeks?stageId=' + planNav.stage.id); } catch (e) { notifyError(e); } }
+    async function loadDays() { try { days.value = await api('/api/admin/days?weekId=' + planNav.week.id); } catch (e) { notifyError(e); } }
+    function intoStages(p) { planNav.plan = p; planNav.stage = null; planNav.week = null; loadStages(); }
+    function intoWeeks(s) { planNav.stage = s; planNav.week = null; loadWeeks(); }
+    function intoDays(w) { planNav.week = w; loadDays(); }
+    function backToPlans() { planNav.stage = null; planNav.plan = null; loadPlans(); }
+    function backToStages() { planNav.week = null; planNav.stage = null; loadStages(); }
+    function backToWeeks() { planNav.day = null; planNav.week = null; loadWeeks(); }
+
+    // ---------- 菜品 / 候选组 / 内容块 / 统计 ----------
+    const dishes = ref([]); const groups = ref([]); const blocks = ref([]);
+    const dishKw = ref(''); const blockType = ref('banner');
+    const overview = ref({}); const checkinStats = ref([]); const statRange = ref([]);
+
+    function dishName(id) { const d = dishes.value.find(x => x.id === id); return d ? d.name : ('菜品' + id); }
+    function mealName(t) { return ({ 1: '早餐', 2: '午餐', 3: '晚餐' })[t] || '餐食'; }
+
+    async function loadDishes() { try { dishes.value = await api('/api/admin/dishes?keyword=' + encodeURIComponent(dishKw.value)); } catch (e) { notifyError(e); } }
+    async function loadGroups() { try { groups.value = await api('/api/admin/candidate-groups'); } catch (e) { notifyError(e); } }
+    async function loadBlocks() { try { blocks.value = await api('/api/admin/content-blocks?type=' + blockType.value); } catch (e) { notifyError(e); } }
+    async function loadStats() {
+      try {
+        overview.value = await api('/api/admin/stats/overview');
+        const to = new Date().toISOString().slice(0, 10);
+        const from = new Date(Date.now() - 29 * 864e5).toISOString().slice(0, 10);
+        statRange.value = [from, to];
+        checkinStats.value = await api(`/api/admin/stats/checkins?from=${from}&to=${to}`);
+      } catch (e) { notifyError(e); }
+    }
+    async function loadCheckinStats() {
+      if (!statRange.value || statRange.value.length < 2) return;
+      try { checkinStats.value = await api(`/api/admin/stats/checkins?from=${statRange.value[0]}&to=${statRange.value[1]}`); } catch (e) { notifyError(e); }
+    }
+    function exportStats() {
+      const lines = ['date,checkins,users,rate'].concat(checkinStats.value.map(r => `${r.date},${r.checkins},${r.users},${r.rate}`));
+      const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '打卡统计.csv'; a.click();
+    }
+
+    // ---------- 打开/保存/删除 ----------
+    function openPlan(row) { dlg.type = 'plan'; dlg.title = row ? '编辑方案' : '新建方案'; dlg.data = row ? { ...row } : { name: '', intro: '', status: 0, sort: 0 }; dlg.ctx = {}; dlg.show = true; }
+    function openStage(row) { dlg.type = 'stage'; dlg.title = row ? '编辑阶段' : '新建阶段'; dlg.data = row ? { ...row } : { planId: planNav.plan.id, name: '', theme: '', sort: 0, detailRichText: '' }; dlg.ctx = {}; dlg.show = true; }
+    function openWeek(row) { dlg.type = 'week'; dlg.title = row ? '编辑周' : '新建周'; dlg.data = row ? { ...row } : { stageId: planNav.stage.id, label: '', theme: '', coverImage: '', sort: 0 }; dlg.ctx = {}; dlg.show = true; }
+    function openDish(row) { dlg.type = 'dish'; dlg.title = row ? '编辑菜品' : '新建菜品'; dlg.data = row ? { ...row } : { name: '', subtitle: '', category: '', imagesJson: '[]', ingredientsJson: '[]', stepsJson: '[]', status: 0 }; dlg.ctx = {}; dlg.show = true; }
+    function openBlock(row) { dlg.type = 'block'; dlg.title = row ? '编辑内容块' : '新建内容块'; dlg.data = row ? { ...row } : { type: blockType.value, title: '', image: '', url: '', sort: 0, enabled: true }; dlg.ctx = {}; dlg.show = true; }
+    function openGroup(row) {
+      dlg.type = 'group'; dlg.title = row ? '编辑候选组' : '新建候选组';
+      dlg.data = row ? { ...row } : { name: '' };
+      dlg.dishIds = row ? row.items.map(i => i.dishId) : [];
+      loadDishes(); dlg.show = true;
+    }
+    function openSlotItem(day, meal) { dlg.type = 'slotitem'; dlg.title = `加菜品槽位（${mealName(meal.mealType)}）`; dlg.data = { dishId: null, candidateGroupId: null, sort: 0 }; dlg.ctx = { mealSlotId: meal.id }; loadDishes(); loadGroups(); dlg.show = true; }
+
+    async function saveDlg() {
+      try {
+        const d = dlg.data;
+        if (dlg.type === 'plan') await api(d.id ? `/api/admin/plans/${d.id}` : '/api/admin/plans', d.id ? 'PUT' : 'POST', d);
+        else if (dlg.type === 'stage') await api(d.id ? `/api/admin/stages/${d.id}` : '/api/admin/stages', d.id ? 'PUT' : 'POST', d);
+        else if (dlg.type === 'week') await api(d.id ? `/api/admin/weeks/${d.id}` : '/api/admin/weeks', d.id ? 'PUT' : 'POST', d);
+        else if (dlg.type === 'dish') await api(d.id ? `/api/admin/dishes/${d.id}` : '/api/admin/dishes', d.id ? 'PUT' : 'POST', d);
+        else if (dlg.type === 'block') await api(d.id ? `/api/admin/content-blocks/${d.id}` : '/api/admin/content-blocks', d.id ? 'PUT' : 'POST', d);
+        else if (dlg.type === 'group') {
+          const body = { id: d.id || 0, name: d.name, items: dlg.dishIds.map(id => ({ dishId: id })) };
+          await api(d.id ? `/api/admin/candidate-groups/${d.id}` : '/api/admin/candidate-groups', d.id ? 'PUT' : 'POST', body);
+        }
+        else if (dlg.type === 'slotitem') {
+          await api(`/api/admin/days/slots/${dlg.ctx.mealSlotId}/dishes`, 'POST', d);
+        }
+        ElementPlus.ElMessage.success('已保存');
+        dlg.show = false; refreshCurrent();
+      } catch (e) { notifyError(e); }
+    }
+
+    async function doDel(path, tip) {
+      try { await ElementPlus.ElMessageBox.confirm(tip, '确认删除', { type: 'warning' }); } catch { return; }
+      try { await api(path, 'DELETE'); ElementPlus.ElMessage.success('已删除'); refreshCurrent(); } catch (e) { notifyError(e); }
+    }
+    const delPlan = r => doDel('/api/admin/plans/' + r.id, '删除方案「' + r.name + '」？');
+    const delStage = r => doDel('/api/admin/stages/' + r.id, '删除阶段「' + r.name + '」？');
+    const delWeek = r => doDel('/api/admin/weeks/' + r.id, '删除周「' + r.label + '」？');
+    const delDay = r => doDel('/api/admin/days/' + r.id, '删除第' + r.dayNo + '天及其全部槽位？');
+    const delSlotItem = i => doDel('/api/admin/days/slots/' + i.id, '删除菜品槽位 #' + i.id + '？');
+    const delDish = r => doDel('/api/admin/dishes/' + r.id, '删除菜品「' + r.name + '」？');
+    const delGroup = r => doDel('/api/admin/candidate-groups/' + r.id, '删除候选组「' + r.name + '」？');
+    const delBlock = r => doDel('/api/admin/content-blocks/' + r.id, '删除内容块「' + r.title + '」？');
+
+    async function addDay() {
+      try {
+        const { value } = await ElementPlus.ElMessageBox.prompt('输入天序号（周内第几天）', '新建天', { inputValue: String((days.value.length || 0) + 1) });
+        await api('/api/admin/days', 'POST', { weekId: planNav.week.id, dayNo: parseInt(value), withDefaultMeals: true });
+        ElementPlus.ElMessage.success('已创建'); loadDays();
+      } catch (e) { if (e !== 'cancel' && e.message) notifyError(e); }
+    }
+
+    // ---------- 上传 ----------
+    async function upload(ev, cb) {
+      const file = ev.target.files[0]; if (!file) return;
+      const fd = new FormData(); fd.append('file', file);
+      try {
+        const resp = await fetch('/api/admin/upload', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token.value }, body: fd });
+        if (!resp.ok) throw new Error('上传失败');
+        const data = await resp.json(); cb(data.url); ElementPlus.ElMessage.success('上传成功');
+      } catch (e) { notifyError(e); }
+    }
+
+    function refreshCurrent() {
+      if (view.value === 'plans') { if (planNav.week) loadDays(); else if (planNav.stage) loadWeeks(); else if (planNav.plan) loadStages(); else loadPlans(); }
+      else if (view.value === 'dishes') loadDishes();
+      else if (view.value === 'groups') loadGroups();
+      else if (view.value === 'blocks') loadBlocks();
+    }
+    function loadAll() { loadPlans(); loadDishes(); loadGroups(); loadBlocks(); loadStats(); }
+    if (token.value) loadAll();
+
+    return {
+      token, view, login, menus, dlg,
+      plans, stages, weeks, days, planNav,
+      dishes, groups, blocks, dishKw, blockType,
+      overview, checkinStats, statRange,
+      doLogin, logout, dishName, mealName,
+      intoStages, intoWeeks, intoDays, backToPlans, backToStages, backToWeeks,
+      openPlan, openStage, openWeek, openDish, openBlock, openGroup, openSlotItem,
+      saveDlg, delPlan, delStage, delWeek, delDay, delSlotItem, delDish, delGroup, delBlock,
+      addDay, upload, loadDishes, loadBlocks, loadCheckinStats, exportStats, loadAll
+    };
+  }
+});
+app.use(ElementPlus, { locale: typeof ElementPlusLocaleZhCn !== 'undefined' ? ElementPlusLocaleZhCn : undefined });
+app.mount('#app');
+</script>
+</body>
+</html>

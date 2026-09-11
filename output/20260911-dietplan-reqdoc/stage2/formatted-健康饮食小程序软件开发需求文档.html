@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="docx-page-size" content="A4">
+  <title>健康饮食方案小程序软件开发需求文档</title>
+  <style>
+  @page { @bottom-center { content: counter(page); } }
+  @page cover { @bottom-center { content: none; } }
+  section[role="cover"] { page: cover; }
+
+  :root {
+    /* design tokens: business-modern */
+    --typography-fontFamily-heading: "微软雅黑", "Microsoft YaHei", "PingFang SC";
+    --typography-fontFamily-body: "微软雅黑", "Microsoft YaHei", "PingFang SC";
+    --typography-fontSize-title: 28pt;
+    --typography-fontSize-subtitle: 18pt;
+    --typography-fontSize-h1: 20pt;
+    --typography-fontSize-coverTitle: 22pt;
+    --typography-fontSize-coverCategory: 14pt;
+    --typography-fontSize-h2: 11pt;
+    --typography-fontSize-h3: 10pt;
+    --typography-fontSize-body: 9pt;
+    --typography-fontSize-small: 8pt;
+    --typography-lineHeight-body: 1.6;
+    --typography-fontWeight-heading: 600;
+    --color-primary: #1565C0;
+    --color-secondary: #0288D1;
+    --color-accent: #00897B;
+    --color-text: #212121;
+    --color-textSecondary: #616161;
+    --color-heading: #1A237E;
+    --color-divider: #E0E0E0;
+    --color-background: #FFFFFF;
+    --color-surface: #F5F7FA;
+    --spacing-paragraph: 0.75em;
+    --spacing-sectionGap: 2.5em;
+    --spacing-cardPadding: 1.5em;
+    --layout-marginTop: 2.5cm;
+    --layout-marginBottom: 2.0cm;
+    --layout-marginLeft: 2.5cm;
+    --layout-marginRight: 2.5cm;
+
+    /* local aliases */
+    --fs-h1: var(--typography-fontSize-h1, 20pt);
+    --fs-h2: var(--typography-fontSize-h2, 11pt);
+    --fs-h3: var(--typography-fontSize-h3, 10pt);
+    --fs-body: var(--typography-fontSize-body, 9pt);
+    --fs-small: var(--typography-fontSize-small, 8pt);
+    --ff-heading: var(--typography-fontFamily-heading, "微软雅黑", sans-serif);
+    --ff-body: var(--typography-fontFamily-body, "微软雅黑", sans-serif);
+    --lh-body: var(--typography-lineHeight-body, 1.6);
+    --fw-bold: 700;
+    --color-muted: var(--color-textSecondary, #616161);
+    --color-border: var(--color-divider, #E0E0E0);
+    --color-bg: var(--color-background, #FFFFFF);
+    --color-highlight: var(--color-surface, #F5F7FA);
+    --color-summary-bg: var(--color-highlight, #F5F7FA);
+    --color-summary-border: var(--color-primary);
+    --summary-border-width: 4px;
+    --color-emphasis: #C62828;
+    --spacing-paragraph: var(--spacing-paragraph, 0.75em);
+    --spacing-section: var(--spacing-sectionGap, 2.5em);
+    --spacing-block: 1em;
+    --spacing-3xs: 0.3em;
+    --spacing-2xs: 0.4em;
+    --spacing-xs: 0.5em;
+    --spacing-sm: 0.6em;
+    --spacing-md: 0.8em;
+    --spacing-lg: 1.5em;
+    --margin-page: 2.0cm;
+    --page-content-width: 15.6cm;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--ff-body); font-size: var(--fs-body); line-height: var(--lh-body); color: var(--color-text); background: var(--color-bg); max-width: var(--page-content-width); margin-left: auto; margin-right: auto; }
+
+  /* Cover */
+  .report-cover { min-height: 24cm; padding: var(--margin-page); background: var(--color-highlight); }
+  .cover-category { font-size: var(--typography-fontSize-coverCategory, 14pt); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-primary); letter-spacing: 0.08em; margin-bottom: var(--spacing-md); text-align: left; }
+  .cover-title { font-size: var(--typography-fontSize-coverTitle, 22pt); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-heading); margin-bottom: var(--spacing-xs); text-align: left; }
+  .cover-subtitle { font-size: var(--typography-fontSize-subtitle, 18pt); font-family: var(--ff-heading); font-weight: var(--typography-fontWeight-heading, 600); color: var(--color-muted); margin-bottom: var(--spacing-section); text-align: left; }
+  .cover-meta { font-size: var(--fs-small); color: var(--color-muted); text-align: left; }
+  .cover-meta p { text-align: left; margin-bottom: var(--spacing-2xs); }
+
+  /* TOC */
+  .doc-toc { padding: var(--spacing-block) 0; background: var(--color-bg); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-section); }
+  .toc-title { font-family: var(--ff-heading); font-weight: var(--fw-bold); font-size: var(--fs-h2); color: var(--color-heading); margin-bottom: var(--spacing-xs); text-align: left; }
+  .toc-list, .toc-list ol, .toc-list ul { list-style: none; list-style-type: none; padding-left: var(--spacing-lg); }
+  .toc-list li { margin-bottom: var(--spacing-3xs); text-indent: 0; text-align: left; }
+  .toc-list a { color: var(--color-primary); text-decoration: none; }
+
+  /* Executive summary */
+  .executive-summary { margin: 0 0 var(--spacing-section) 0; padding: var(--spacing-block); border-left: var(--summary-border-width) solid var(--color-summary-border); background: var(--color-summary-bg); }
+  .summary-header h2 { font-size: var(--fs-h2); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-heading); margin-bottom: var(--spacing-block); text-align: left; }
+  .summary-highlights table { width: 100%; border-collapse: collapse; margin-bottom: var(--spacing-block); }
+  .summary-highlights th, .summary-highlights td { border: 1px solid var(--color-border); padding: var(--spacing-xs) var(--spacing-md); text-align: center; }
+  .summary-highlights th { background: var(--color-highlight); font-family: var(--ff-heading); color: var(--color-heading); }
+  .summary-highlights td { font-size: var(--fs-h3); font-weight: var(--fw-bold); color: var(--color-primary); }
+  .summary-body { text-align: justify; }
+
+  /* Main body */
+  .report-body { padding: var(--spacing-block) 0; }
+  .report-body h2 { font-size: var(--fs-h2); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-heading); border-left: 4px solid var(--color-primary); padding-left: var(--spacing-sm); margin-top: var(--spacing-section); margin-bottom: var(--spacing-paragraph); text-align: left; }
+  .report-body h3 { font-size: var(--fs-h3); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-heading); margin-top: var(--spacing-block); margin-bottom: var(--spacing-paragraph); text-align: left; }
+  .report-body p { margin-bottom: var(--spacing-paragraph); text-align: justify; }
+  .report-body li { margin-bottom: 0.4em; text-align: justify; }
+
+  /* Tables */
+  table.data { width: 100%; border-collapse: collapse; margin: var(--spacing-paragraph) 0; }
+  table.data th, table.data td { border: 1px solid var(--color-border); padding: var(--spacing-xs) var(--spacing-md); font-size: var(--fs-small); }
+  table.data th { background: var(--color-highlight); font-family: var(--ff-heading); font-weight: var(--fw-bold); color: var(--color-heading); text-align: left; }
+  table.data td { text-align: left; }
+  table.data caption { caption-side: top; font-size: var(--fs-small); color: var(--color-muted); text-align: left; padding-bottom: var(--spacing-2xs); }
+
+  /* Callout */
+  p.callout { border-left: 4px solid var(--color-accent); background: var(--color-highlight); padding: var(--spacing-sm) var(--spacing-md); margin: var(--spacing-paragraph) 0; text-align: justify; }
+
+  /* Appendix */
+  .appendix { padding: var(--spacing-block) 0 0 0; border-top: 1px solid var(--color-border); }
+  .appendix p { font-size: var(--fs-small); color: var(--color-muted); text-align: justify; }
+  </style>
+</head>
+<body>
+  <section role="cover" class="report-cover">
+    <p class="cover-category">软件开发需求文档</p>
+    <h1 class="cover-title">健康饮食方案小程序<br>（均衡抗炎方案）软件开发需求文档</h1>
+    <p class="cover-subtitle">四级页面框架 · 内容全可配 · 打卡与统计</p>
+    <div class="cover-meta">
+      <p>文档版本：V1.0（需求评审中）</p>
+      <p>编写日期：2026 年 9 月 11 日</p>
+      <p>技术栈：微信小程序原生 + ASP.NET Core 8 Web API + SQL Server + Vue 3 管理后台</p>
+    </div>
+  </section>
+
+  <section role="body" class="report-body" data-page-restart="1">
+    <nav class="doc-toc" aria-label="文档目录">
+      <p class="toc-title">目录</p>
+      <ol class="toc-list">
+        <li><a href="#section-1">一、项目概述</a></li>
+        <li><a href="#section-2">二、用户角色</a></li>
+        <li><a href="#section-3">三、整体页面结构（四级页面 + 底部 Tab）</a></li>
+        <li><a href="#section-4">四、功能需求（C 端）</a></li>
+        <li><a href="#section-5">五、功能需求（后台管理端）</a></li>
+        <li><a href="#section-6">六、非功能需求</a></li>
+        <li><a href="#section-7">七、技术架构</a></li>
+        <li><a href="#section-8">八、迭代计划（建议）</a></li>
+        <li><a href="#section-9">九、待确认项</a></li>
+      </ol>
+    </nav>
+
+    <div class="executive-summary">
+      <div class="summary-header">
+        <h2>执行摘要</h2>
+      </div>
+      <div class="summary-highlights">
+        <table>
+          <thead>
+            <tr><th>页面层级</th><th>底部 Tab</th><th>交付端</th><th>里程碑</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>4 级</td><td>4 个</td><td>小程序 + 后台</td><td>6 周</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="summary-body">
+        <p>参照均衡抗炎饮食方案类竞品的交互形态，开发一款健康饮食方案小程序。运营方在后台配置"方案 → 阶段 → 周 → 天 → 餐次 → 菜品"的完整内容树与全部图片素材，用户在 C 端按阶段查看每周营养食谱，逐菜查看制作方法、在候选组内更换菜品并完成餐食打卡。本期为内容展示 + 打卡闭环的最小可用版本：四级 C 端页面、微信授权登录、打卡记录与统计、后台全量内容维护；不含支付、社交与智能推荐。</p>
+      </div>
+    </div>
+
+    <main>
+      <h2 id="section-1">一、项目概述</h2>
+      <p>本章界定项目背景、建设目标与本期交付边界，作为需求评审与开发排期的总纲。</p>
+      <h3>（一）项目背景</h3>
+      <p>参照竞品（均衡抗炎饮食方案类小程序）的交互形态，开发一款健康饮食方案小程序。核心玩法是：运营方在后台配置"分阶段饮食方案"（如 4 个阶段、每阶段若干周、每天早中晚三餐的菜品组合），用户在小程序内按阶段、按天查看营养食谱，查看每道菜的制作方法，不满意可一键更换同类菜品，并完成每日餐食打卡，形成"方案消费 + 打卡坚持"的健康饮食闭环。</p>
+      <h3>（二）项目目标</h3>
+      <ol>
+        <li>搭建完整的前端四级页面框架与后端内容管理能力，内容（文案、图片、方案结构）全部支持后台维护，无需发版即可更新。</li>
+        <li>实现用户打卡记录与基础统计，为后续运营（连续打卡、提醒、复购转化）打基础。</li>
+        <li>系统轻量起步：一期聚焦内容展示与打卡，不做电商、社交、支付。</li>
+      </ol>
+      <h3>（三）本期范围</h3>
+      <ul>
+        <li><strong>包含</strong>：小程序 C 端四级页面、微信授权登录、打卡记录与统计、后台内容维护（方案/菜品/图片全量可配）。</li>
+        <li><strong>不包含</strong>（后续迭代）：支付与商城、社区互动、智能推荐、消息推送、多租户。</li>
+      </ul>
+
+      <h2 id="section-2">二、用户角色</h2>
+      <table class="data">
+        <thead><tr><th>角色</th><th>说明</th><th>主要操作</th></tr></thead>
+        <tbody>
+          <tr><td>C 端用户</td><td>微信授权登录的普通用户</td><td>浏览方案、查看食谱与制作方法、更换菜品、餐食打卡、查看个人记录</td></tr>
+          <tr><td>管理员</td><td>运营/内容维护人员</td><td>登录后台，维护方案、阶段、天、餐次、菜品、食材、步骤、图片，查看打卡统计</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="section-3">三、整体页面结构（四级页面 + 底部 Tab）</h2>
+      <p>小程序底部 Tab 固定 4 个：<strong>首页、方案、视频秀、我的</strong>（方案为默认主 Tab，"视频秀"可挂"上新"角标）。四级页面层级如下：</p>
+      <table class="data">
+        <thead><tr><th>层级</th><th>页面</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>L1</td><td>方案列表页（Tab：方案）</td><td>按阶段分组展示周卡片，入口"查看方案"</td></tr>
+          <tr><td>L2</td><td>阶段详情 · 每日食谱页</td><td>天选择器 + 早/中/晚餐菜品卡片 + 打卡操作</td></tr>
+          <tr><td>L3</td><td>菜品制作解析页</td><td>菜品大图、食材清单、分步制作说明</td></tr>
+          <tr><td>L4</td><td>更换菜品页</td><td>搜索同类候选菜品，单选后确认替换</td></tr>
+        </tbody>
+      </table>
+      <p>页面流转：<strong>方案列表(L1) → 选某周 → 每日食谱(L2) → 点"查看制作方法" → 制作解析(L3)；在 L2 点"更换菜品" → 更换菜品(L4) → 确认更换 → 回写 L2</strong>。</p>
+
+      <h2 id="section-4">四、功能需求（C 端）</h2>
+      <h3>（一）L1 方案列表页</h3>
+      <ul>
+        <li>页面标题为当前方案名（如"均衡抗炎方案"）。</li>
+        <li>左侧竖向"阶段导航条"（第 1 阶段 / 第 2 阶段 / 第 3 阶段 / 第 4 阶段），点击可锚点定位，滚动时高亮当前阶段。</li>
+        <li>每个阶段下按"周"渲染横向卡片（第 1 周、第 2 周、第 3/4 周、第 5 周……），卡片元素：周标签（左上角胶囊）；阶段主题名（如"均衡启动""胰岛平衡""肠道修整""代谢焕活"）；背景大图（后台可配）；"查看方案 ›"按钮 → 进入 L2。</li>
+        <li>阶段与周的划分（一个阶段含几周、每周几天）完全由后台配置驱动。</li>
+      </ul>
+      <h3>（二）L2 阶段详情 · 每日食谱页</h3>
+      <ul>
+        <li>顶部导航：返回 + 标题"代谢畅通第1阶段 均衡启动（第1周）"（格式：方案名 + 阶段 + 周，动态拼接）。</li>
+        <li><strong>天选择器</strong>：横向滚动的日期胶囊（01 第 1 天 / 02 第 2 天 / ……），点击切换当日食谱，当前天高亮。</li>
+        <li><strong>营养食谱区</strong>：区块标题"营养食谱"，右上角"今日食谱所需食材 ›"入口（汇总当天全部食材清单，便于采购）。</li>
+        <li>按<strong>餐次</strong>（早餐/午餐/晚餐，后台可配）分组，每组含：餐次头（图标 + 餐次名 + "一键打卡"按钮，该餐次下所有菜品一次性打卡）；菜品卡片列表。</li>
+        <li>菜品卡片：菜品图、菜品名、食材及克重摘要（如"有机黑米 20g、粳米 20g"，后台配置），两个操作——<strong>查看制作方法 ›</strong>（进入 L3）；<strong>更换菜品 ›</strong>（进入 L4，按后台配置的"可替换候选组"展示候选）。</li>
+        <li>底部固定操作条：<strong>方案详情</strong>（进入本阶段方案说明，图文富文本，后台可配）+ <strong>餐食打卡</strong>（当日全部餐次一键打卡）。</li>
+        <li>右下角悬浮"方案解读"入口（视频或图文，后台可配，一期可先挂图文）。</li>
+        <li>已打卡的餐次/菜品有明确的已完成视觉标识；更换菜品后当日食谱即时刷新。</li>
+      </ul>
+      <h3>（三）L3 菜品制作解析页</h3>
+      <ul>
+        <li>顶部：菜品大图（通栏，后台可配，多图支持轮播）。</li>
+        <li>标题行：菜品名 + "喜欢这道菜"收藏按钮（一期仅本地记录，可后续接入服务端）。</li>
+        <li><strong>食材清单</strong>卡片：按"主要食材"分组，每个食材含名称、用量、缩略图。</li>
+        <li><strong>制作步骤</strong>卡片：步骤 1、2、3……逐条展示，每步含步骤文案（后台可配图文，步骤图可选）。</li>
+        <li>本页数据全部来自菜品主数据，无独立维护入口。</li>
+      </ul>
+      <h3>（四）L4 更换菜品页</h3>
+      <ul>
+        <li>顶部搜索框："搜索您想替换的菜品" + 搜索按钮，支持按菜名/食材模糊搜索（在当前候选组内过滤）。</li>
+        <li>候选菜品列表：单选（radio）交互，当前菜品默认选中；每项含菜品图、菜名、食材摘要、"查看制作方法 ›"（可跳 L3 预览后再决定）。</li>
+        <li>底部固定"确认更换"按钮：点击后将当日该餐次对应菜品槽位替换为所选菜品，toast 提示成功并返回 L2。</li>
+        <li><strong>候选范围规则</strong>：每个菜品槽位在后台配置一个"可替换候选组"（同类型主食换主食、蔬菜换蔬菜），用户只能在候选组内更换，保证营养结构不被破坏。</li>
+      </ul>
+      <h3>（五）打卡与统计</h3>
+      <ul>
+        <li>打卡粒度：菜品级（单菜打卡）、餐次级（一键打卡）、天级（餐食打卡全部），底层统一记录为菜品打卡明细。</li>
+        <li>每条打卡记录含：用户、日期、阶段、周、天、餐次、菜品、打卡时间。</li>
+        <li>打卡仅限当日（历史天只读浏览，不可补打卡；是否允许补打卡列为待确认项）。</li>
+        <li>"我的"页展示：累计打卡天数、连续打卡天数、近期打卡日历（月视图）。</li>
+      </ul>
+      <h3>（六）首页 / 视频秀 / 我的</h3>
+      <table class="data">
+        <thead><tr><th>Tab</th><th>一期范围</th></tr></thead>
+        <tbody>
+          <tr><td>首页</td><td>运营位：banner 图（后台可配）+ 方案入口卡片 + 健康资讯列表（后台可配图文）</td></tr>
+          <tr><td>视频秀</td><td>视频列表页（后台可配视频封面/链接/标题），点击播放；带"上新"角标开关</td></tr>
+          <tr><td>我的</td><td>用户信息（微信头像昵称）、打卡统计（累计/连续/日历）、收藏的菜品、关于</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="section-5">五、功能需求（后台管理端）</h2>
+      <p>管理后台是本系统内容能力的唯一入口，C 端所有展示的信息与图片均由此维护，要求日常运营零代码变更。</p>
+      <p>管理后台为 Web 端（Vue 3 + Element Plus），账号密码登录，管理员角色管理。</p>
+      <h3>（一）内容维护（核心）</h3>
+      <p>所有 C 端展示的信息与图片均可维护，层级结构为：<strong>方案 → 阶段 → 周 → 天 → 餐次 → 菜品槽位 → 候选组/菜品</strong>。</p>
+      <table class="data">
+        <thead><tr><th>模块</th><th>维护内容</th></tr></thead>
+        <tbody>
+          <tr><td>方案管理</td><td>方案名、简介、状态（草稿/上线/下线）、排序</td></tr>
+          <tr><td>阶段管理</td><td>阶段名、主题名、顺序、阶段导航文案、方案详情富文本</td></tr>
+          <tr><td>周管理</td><td>周标签（第 N 周）、归属阶段、周主题、卡片背景图上传</td></tr>
+          <tr><td>天管理</td><td>每周的天数、每日三餐的菜品槽位配置（从菜品库选菜）</td></tr>
+          <tr><td>菜品管理</td><td>菜名、副标题、食材及克重（结构化）、制作步骤（富文本/分步图文）、大图/轮播图上传、分类（主食/荤菜/素菜/汤品…）、状态</td></tr>
+          <tr><td>食材管理</td><td>食材名、单位、图片（可复用菜品维度）</td></tr>
+          <tr><td>候选组管理</td><td>为每个菜品槽位配置可替换的候选菜品集合</td></tr>
+          <tr><td>素材管理</td><td>图片/视频统一上传，支持拖拽、预览、复用；存储至服务器或对象存储</td></tr>
+          <tr><td>今日所需食材</td><td>按天自动汇总食材清单（系统计算），支持人工微调备注</td></tr>
+        </tbody>
+      </table>
+      <h3>（二）运营与统计</h3>
+      <ul>
+        <li>用户列表：openid、头像昵称、注册时间、最近活跃。</li>
+        <li>打卡统计：按日/周/月汇总打卡人数、打卡率；单用户打卡明细查询；导出 Excel。</li>
+        <li>方案热度：各方案/阶段的进入量统计（一期可用简单的访问计数）。</li>
+      </ul>
+      <h3>（三）通用要求</h3>
+      <ul>
+        <li>内容支持草稿/发布双态，发布后小程序端即时生效（接口实时读取，无需审核机制）。</li>
+        <li>删除菜品/阶段时做引用校验（被方案引用的不可直接删除）。</li>
+        <li>关键操作（删除、下线）二次确认。</li>
+      </ul>
+
+      <h2 id="section-6">六、非功能需求</h2>
+      <table class="data">
+        <thead><tr><th>类别</th><th>要求</th></tr></thead>
+        <tbody>
+          <tr><td>性能</td><td>列表接口响应 &lt; 500ms；图片走 CDN/静态资源，小程序端做懒加载与本地缓存</td></tr>
+          <tr><td>容量</td><td>一期支撑 1 万注册用户、1000 日活；并发无压力场景</td></tr>
+          <tr><td>安全</td><td>接口 JWT 鉴权；管理后台 RBAC（一期仅管理员角色）；图片上传校验类型与大小；SQL 参数化</td></tr>
+          <tr><td>兼容</td><td>微信基础库 2.30+，iOS/Android 主流机型；iPhone SE 小屏适配</td></tr>
+          <tr><td>合规</td><td>微信授权登录获取 openid，不强制获取手机号；隐私协议弹窗首次启动展示</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="section-7">七、技术架构</h2>
+      <h3>（一）技术选型</h3>
+      <table class="data">
+        <thead><tr><th>层</th><th>选型</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>小程序端</td><td>微信原生（WXML/WXSS/JS）</td><td>无跨端框架，TabBar 4 页 + 各级页面</td></tr>
+          <tr><td>后端</td><td>ASP.NET Core 8 Web API</td><td>Clean Architecture 分层；JWT 鉴权；RESTful 接口</td></tr>
+          <tr><td>数据库</td><td>SQL Server</td><td>内容主数据 + 用户打卡数据</td></tr>
+          <tr><td>管理后台</td><td>Vue 3 + Element Plus</td><td>独立部署，走同一 API</td></tr>
+          <tr><td>文件存储</td><td>本地磁盘/对象存储 + 静态访问</td><td>图片统一由后台上传，返回 URL</td></tr>
+        </tbody>
+      </table>
+      <h3>（二）数据模型概要</h3>
+      <table class="data">
+        <thead><tr><th>表</th><th>关键字段</th></tr></thead>
+        <tbody>
+          <tr><td>Plan（方案）</td><td>id, name, intro, status, sort</td></tr>
+          <tr><td>Stage（阶段）</td><td>id, plan_id, name, theme, sort, detail_rich_text</td></tr>
+          <tr><td>Week（周）</td><td>id, stage_id, label, theme, cover_image</td></tr>
+          <tr><td>PlanDay（天）</td><td>id, week_id, day_no</td></tr>
+          <tr><td>MealSlot（餐次槽位）</td><td>id, plan_day_id, meal_type(早/午/晚), sort</td></tr>
+          <tr><td>DishSlotItem（槽位菜品）</td><td>id, meal_slot_id, dish_id, sort</td></tr>
+          <tr><td>DishCandidateGroup（候选组）</td><td>id, name</td></tr>
+          <tr><td>CandidateGroupItem</td><td>group_id, dish_id</td></tr>
+          <tr><td>Dish（菜品）</td><td>id, name, subtitle, category, images, ingredients(json), steps(json), status</td></tr>
+          <tr><td>Ingredient（食材）</td><td>id, name, unit, image</td></tr>
+          <tr><td>User</td><td>id, openid, nickname, avatar, created_at</td></tr>
+          <tr><td>CheckInRecord</td><td>id, user_id, date, plan_id, stage_id, week_id, day_no, meal_type, dish_id, created_at</td></tr>
+        </tbody>
+      </table>
+      <h3>（三）接口概要（REST）</h3>
+      <ul>
+        <li><code>GET /api/plans</code> 方案列表；<code>GET /api/plans/{id}</code> 方案详情（含阶段/周树）。</li>
+        <li><code>GET /api/plans/{id}/days/{dayNo}/meals</code> 某天三餐食谱（含菜品与替换候选标识）。</li>
+        <li><code>GET /api/dishes/{id}</code> 菜品制作解析；<code>GET /api/dishes/{id}/candidates</code> 可替换候选列表（支持关键字搜索）。</li>
+        <li><code>POST /api/checkins</code> 打卡（body 含槽位与菜品）；<code>GET /api/checkins/summary</code> 我的打卡统计。</li>
+        <li><code>POST /api/auth/wx-login</code> 微信 code 换 openid 签发 JWT。</li>
+        <li>管理端 <code>/api/admin/*</code>：上述各实体的 CRUD + 上传 + 统计报表。</li>
+      </ul>
+
+      <h2 id="section-8">八、迭代计划（建议）</h2>
+      <table class="data">
+        <thead><tr><th>里程碑</th><th>内容</th><th>验收标准</th></tr></thead>
+        <tbody>
+          <tr><td>M1（2 周）</td><td>数据模型 + 后台内容维护 CRUD + 图片上传</td><td>后台能完整配出一条"4 阶段方案"</td></tr>
+          <tr><td>M2（2 周）</td><td>C 端 L1-L4 四级页面 + 微信登录</td><td>按截图还原交互，内容全部来自后台</td></tr>
+          <tr><td>M3（1 周）</td><td>打卡 + 统计 + 我的页</td><td>打卡记录落库，后台可查统计并导出</td></tr>
+          <tr><td>M4（1 周）</td><td>联调测试、体验优化、提审发布</td><td>微信审核通过，线上可用</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="section-9">九、待确认项</h2>
+      <ol>
+        <li>历史天是否允许补打卡（影响打卡规则与统计口径）。</li>
+        <li>"方案解读"悬浮入口一期挂图文还是视频。</li>
+        <li>"喜欢这道菜"收藏是否需要服务端持久化（当前按本地存储设计）。</li>
+        <li>图片存储方式：自建服务器磁盘 or 对象存储（OSS/COS）。</li>
+        <li>是否需要"今日食谱所需食材"的采购清单导出/分享功能。</li>
+      </ol>
+    </main>
+
+    <div class="appendix">
+      <p>本文档基于 4 张竞品截图分析与已确认的技术决策（微信原生 / ASP.NET Core 8 + SQL Server / 打卡记录与统计 / 微信授权登录）整理，作为 M1 开发启动依据；待确认项拍板后更新版本号。</p>
+    </div>
+  </section>
+</body>
+</html>

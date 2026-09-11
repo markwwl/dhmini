@@ -1,0 +1,52 @@
+<view wx:if="{{day}}">
+  <!-- 天选择器 -->
+  <scroll-view scroll-x class="day-bar">
+    <view wx:for="{{dayList}}" wx:key="*this" class="day-pill {{dayNo === item ? 'day-pill-active' : ''}}" data-d="{{item}}" bindtap="tapDay">
+      <view>{{item < 10 ? '0' + item : item}}</view>
+      <view class="day-label">第{{item}}天</view>
+    </view>
+  </scroll-view>
+
+  <!-- 营养食谱 -->
+  <view class="section-head">
+    <text class="section-title">营养食谱</text>
+  </view>
+
+  <view class="meal" wx:for="{{day.meals}}" wx:key="mealType">
+    <view class="meal-head">
+      <text class="meal-name">{{item.mealName}}</text>
+      <text class="meal-check" data-meal="{{item.mealType}}" bindtap="checkinMeal">一键打卡</text>
+    </view>
+
+    <view class="dish" wx:for="{{item.slots}}" wx:for-item="slot" wx:key="slotId">
+      <image class="dish-img" src="{{slot.image}}" mode="aspectFill" data-id="{{slot.dishId}}" bindtap="goDish"/>
+      <view class="dish-info">
+        <view class="dish-name">{{slot.dishName}}</view>
+        <view class="dish-ing">{{slot.ingredientsSummary}}</view>
+        <view class="dish-ops">
+          <text class="op" data-id="{{slot.dishId}}" bindtap="goDish">查看制作方法 ›</text>
+          <text class="op" wx:if="{{slot.candidateGroupId}}" data-slotid="{{slot.slotId}}" bindtap="goReplace">更换菜品 ›</text>
+          <text wx:if="{{slot.checked}}" class="tag-checked">已打卡</text>
+          <text wx:else class="op op-check" data-slotid="{{slot.slotId}}" bindtap="checkin">打卡</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height:140rpx"></view>
+
+  <!-- 底部固定操作条 -->
+  <view class="bottom-bar">
+    <button class="bar-btn bar-btn-plain" bindtap="showPlanDetail">方案详情</button>
+    <button class="bar-btn" bindtap="checkinAll">餐食打卡</button>
+  </view>
+
+  <!-- 方案详情浮层 -->
+  <view wx:if="{{showDetail}}" class="mask" bindtap="closeDetail">
+    <view class="detail-panel" catchtap="">
+      <view class="detail-title">方案详情</view>
+      <scroll-view scroll-y style="max-height:60vh"><text user-select>{{detailText}}</text></scroll-view>
+    </view>
+  </view>
+</view>
+<view wx:else class="empty">加载中…</view>

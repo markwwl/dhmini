@@ -1,0 +1,26 @@
+<view class="profile">
+  <view class="avatar">{{nickname[0] || '健'}}</view>
+  <view>
+    <view class="nick">{{nickname}}</view>
+    <view class="sub">微信授权登录</view>
+  </view>
+</view>
+
+<view class="stats" wx:if="{{summary}}">
+  <view class="stat"><view class="num">{{summary.totalDays}}</view><view class="lbl">累计打卡(天)</view></view>
+  <view class="stat"><view class="num">{{summary.streakDays}}</view><view class="lbl">连续打卡(天)</view></view>
+</view>
+<view class="stats" wx:else>
+  <view class="stat"><view class="num">-</view><view class="lbl">累计打卡(天)</view></view>
+  <view class="stat"><view class="num">-</view><view class="lbl">连续打卡(天)</view></view>
+</view>
+
+<view class="card" wx:if="{{summary && summary.calendar.length}}">
+  <view class="card-title">近30天打卡日历</view>
+  <view class="cal">
+    <view wx:for="{{summary.calendar}}" wx:key="date" class="cal-day">
+      <view class="cal-date">{{item.date}}</view>
+      <view class="cal-count">{{item.count}}项</view>
+    </view>
+  </view>
+</view>

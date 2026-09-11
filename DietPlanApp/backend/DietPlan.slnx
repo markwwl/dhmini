@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DietPlan.Api/DietPlan.Api.csproj" />
+    <Project Path="src/DietPlan.Application/DietPlan.Application.csproj" />
+    <Project Path="src/DietPlan.Domain/DietPlan.Domain.csproj" />
+    <Project Path="src/DietPlan.Infrastructure/DietPlan.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DietPlan.Tests/DietPlan.Tests.csproj" />
+  </Folder>
+</Solution>

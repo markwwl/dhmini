@@ -1,0 +1,16 @@
+{
+  "description": "健康饮食方案小程序",
+  "packOptions": { "ignore": [], "include": [] },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "babelSetting": { "ignore": [], "disablePlugins": [], "outputPath": "" }
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.30.0",
+  "appid": "wx229e9895042d08a3",
+  "projectname": "dietplan-miniapp",
+  "condition": {}
+}

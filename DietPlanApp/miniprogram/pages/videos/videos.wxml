@@ -1,0 +1,5 @@
+<view wx:for="{{videos}}" wx:key="id" class="vcard" data-url="{{item.url}}" bindtap="play">
+  <image class="vcover" src="{{item.image}}" mode="aspectFill"/>
+  <view class="vtitle">{{item.title}}</view>
+</view>
+<view wx:if="{{!videos.length}}" class="empty">暂无视频内容</view>

@@ -1,0 +1,14 @@
+.head { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 24rpx; }
+.name { font-size: 34rpx; font-weight: 700; }
+.sub { color: #757575; font-size: 24rpx; margin-top: 6rpx; }
+.like { color: #e53935; font-size: 24rpx; }
+.liked { font-weight: 700; }
+.card { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 24rpx; }
+.card-title { font-weight: 700; margin-bottom: 16rpx; }
+.ing { display: flex; justify-content: space-between; padding: 10rpx 0; border-bottom: 1rpx dashed #eee; }
+.amount { color: #1565C0; }
+.step { display: flex; margin-bottom: 20rpx; }
+.step-no { width: 40rpx; height: 40rpx; border-radius: 50%; background: #1565C0; color: #fff; text-align: center; line-height: 40rpx; font-size: 24rpx; flex-shrink: 0; margin-right: 16rpx; }
+.step-body { flex: 1; }
+.step-img { width: 100%; border-radius: 12rpx; margin-top: 12rpx; }
+.empty { text-align: center; color: #999; padding-top: 200rpx; }
