@@ -1,12 +1,160 @@
-.wrap { display: flex; }
-.nav { width: 140rpx; background: #fff; padding-top: 20rpx; position: sticky; top: 0; height: 100vh; box-sizing: border-box; }
-.nav-item { padding: 24rpx 0; text-align: center; font-size: 24rpx; color: #616161; border-left: 6rpx solid transparent; }
-.nav-item-active { color: #1565C0; border-left-color: #1565C0; font-weight: 700; }
-.stage-title { font-size: 32rpx; font-weight: 700; margin: 32rpx 24rpx 8rpx 180rpx; }
-.week-card { display: flex; background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx 16rpx 180rpx; overflow: hidden; }
-.week-cover { width: 220rpx; height: 180rpx; background: #eef4fb; }
-.week-info { flex: 1; padding: 20rpx; }
-.week-label { background: #1565C0; color: #fff; display: inline-block; font-size: 22rpx; border-radius: 20rpx; padding: 2rpx 16rpx; }
-.week-theme { font-weight: 600; margin-top: 12rpx; }
-.week-go { color: #1565C0; font-size: 24rpx; margin-top: 12rpx; }
-.empty { text-align: center; color: #999; padding-top: 200rpx; }
+/* ============================ 方案页（L1）============================
+   左侧时间轴（随整页滚动）+ 右侧阶段/周卡片
+   说明：整页使用页面级滚动（配合 plan.js 的 onPageScroll 高亮 + wx.pageScrollTo 跳转），
+   故不使用 scroll-view；时间轴节点与右侧阶段块同行，天然对齐、随页面一起滚动。 */
+
+.wrap { min-height: 100vh; padding-bottom: 32rpx; }
+
+/* ---------- 方案头 ---------- */
+.plan-head {
+  margin: 24rpx var(--sp) 8rpx;
+  padding: 32rpx;
+  border-radius: var(--r-lg);
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: 0 14rpx 30rpx rgba(22, 163, 74, .25);
+  position: relative;
+  overflow: hidden;
+}
+.plan-head::after {
+  content: '';
+  position: absolute; right: -60rpx; top: -70rpx;
+  width: 200rpx; height: 200rpx; border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+}
+.plan-name { font-size: 40rpx; font-weight: 800; letter-spacing: 1rpx; }
+.plan-intro { font-size: 25rpx; opacity: .92; margin-top: 12rpx; line-height: 1.5; }
+.plan-meta { margin-top: 20rpx; display: flex; align-items: center; }
+.plan-meta-item {
+  font-size: 22rpx; line-height: 1;
+  padding: 8rpx 18rpx; border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, .2);
+}
+.plan-meta-dot { margin: 0 12rpx; opacity: .7; }
+
+/* ---------- 行容器 ---------- */
+.row { display: flex; align-items: stretch; }
+
+/* ---------- 左侧时间轴 ---------- */
+.tl {
+  width: 176rpx;
+  flex: none;
+  position: relative;
+  box-sizing: border-box;
+  padding: 36rpx 8rpx 24rpx 44rpx;
+}
+/* 竖线：贯穿整行高度；首行从节点下方起、末行到节点止 */
+.tl-axis {
+  position: absolute;
+  left: 19rpx;
+  top: 0;
+  bottom: 0;
+  width: 2rpx;
+  background: #DCE9DF;
+}
+.tl-axis-first { top: 48rpx; }
+.tl-axis-last { bottom: auto; height: 48rpx; }
+
+/* 节点圆点：中心 (20rpx, 48rpx)，与竖线对齐 */
+.tl-dot {
+  position: absolute;
+  left: 8rpx;
+  top: 36rpx;
+  width: 24rpx;
+  height: 24rpx;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: #C7DACD;
+  border: 4rpx solid var(--c-bg);
+  transition: all .25s;
+}
+.tl-dot-active {
+  background: var(--c-primary);
+  box-shadow: 0 0 0 8rpx rgba(22, 163, 74, .14);
+}
+
+.tl-name {
+  display: inline-block;
+  font-size: 22rpx;
+  line-height: 1.4;
+  color: var(--c-text-3);
+  padding: 6rpx 0;
+  transition: color .25s;
+}
+.tl-name-active {
+  color: var(--c-primary-600);
+  font-weight: 700;
+}
+
+/* ---------- 右侧内容区 ---------- */
+.stage-block {
+  flex: 1;
+  min-width: 0;
+  padding: 32rpx 24rpx 4rpx 0;
+}
+.stage-title {
+  display: flex;
+  align-items: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 18rpx;
+}
+.stage-title::before {
+  content: '';
+  width: 8rpx;
+  height: 26rpx;
+  border-radius: 4rpx;
+  background: var(--grad-primary);
+  margin-right: 12rpx;
+}
+
+/* 周卡片：左图右文；图固定不被压缩，文字区可换行（min-width:0 防溢出） */
+.week-card {
+  display: flex;
+  background: var(--c-card);
+  border-radius: var(--r-md);
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: var(--sh-1);
+}
+.week-card:active { background: #FAFDFA; }
+
+.week-cover-box { position: relative; flex: none; width: 216rpx; height: 176rpx; }
+.week-cover { width: 216rpx; height: 176rpx; background: #E7EFE8; }
+.week-label {
+  position: absolute;
+  left: 0; top: 0;
+  padding: 6rpx 16rpx 6rpx 12rpx;
+  background: rgba(6, 26, 14, .6);
+  color: #fff;
+  font-size: 20rpx;
+  line-height: 1.4;
+  border-bottom-right-radius: var(--r-sm);
+  border-top-left-radius: var(--r-md);
+}
+
+.week-info {
+  flex: 1;
+  min-width: 0;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.week-theme { font-size: 28rpx; font-weight: 700; color: var(--c-text); }
+.week-meta {
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.week-days {
+  font-size: 22rpx;
+  line-height: 1;
+  padding: 6rpx 14rpx;
+  border-radius: var(--r-pill);
+  background: var(--c-primary-50);
+  color: var(--c-primary-600);
+}
+.week-go { color: var(--c-primary); font-size: 24rpx; font-weight: 500; }

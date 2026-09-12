@@ -23,6 +23,15 @@ dist/
 *.log
 ip_tmp.txt
 
+# ===== 本地调试/验证产物（截图、无头浏览器脚本、预览页），不入库 =====
+output/dbg/
+output/admin-fix/
+output/*.html
+output/*.png
+
+# ===== 微信开发者工具本地私有配置（含本机调试开关），不入库 =====
+project.private.config.json
+
 # ===== OS / 编辑器 =====
 Thumbs.db
 Desktop.ini

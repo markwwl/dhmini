@@ -2,9 +2,12 @@
 const { request } = require('../../utils/request');
 
 Page({
-  data: { banners: [], plan: null, news: [] },
+  data: { banners: [], plan: null, news: [], bannerIndex: 0 },
 
   onShow() { this.loadData(); },
+
+  // banner 轮播切换 → 驱动自定义指示点
+  onBannerChange(e) { this.setData({ bannerIndex: e.detail.current }); },
 
   async loadData() {
     try {

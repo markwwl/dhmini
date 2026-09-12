@@ -1,10 +1,111 @@
-/* 首页样式 */
-.banners { margin: 24rpx; }
+/* ============================ 首页 ============================ */
 
-/* 健康资讯列表 */
-.news-item { display: flex; align-items: center; padding: 16rpx 0; border-top: 1rpx solid #f0f0f0; }
-.news-item:first-of-type { border-top: none; }
-.news-img { width: 120rpx; height: 120rpx; border-radius: 12rpx; flex-shrink: 0; background: #f3f3f3; }
-.news-body { flex: 1; margin-left: 20rpx; min-width: 0; }
-.news-title { font-size: 28rpx; color: #222; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.news-link { margin-top: 10rpx; font-size: 24rpx; color: #1565C0; }
+/* ---------- Banner ---------- */
+.banners { margin: 24rpx var(--sp) 4rpx; }
+.banner-swiper {
+  height: 340rpx;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--sh-2);
+}
+.banner-item { position: relative; width: 100%; height: 340rpx; }
+.banner-img { width: 100%; height: 340rpx; background: #E7EFE8; }
+.banner-mask {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 56rpx 28rpx 24rpx;
+  background: linear-gradient(to top, rgba(6, 26, 14, .74), rgba(6, 26, 14, 0));
+}
+.banner-title { color: #fff; font-size: 30rpx; font-weight: 700; }
+.banner-dots {
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 18rpx;
+}
+.dot {
+  width: 12rpx; height: 8rpx; border-radius: 4rpx;
+  background: #CBDFD1; margin: 0 6rpx;
+  transition: all .3s;
+}
+.dot-on { width: 34rpx; background: var(--c-primary); }
+
+/* ---------- 方案 Hero 卡 ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 24rpx var(--sp);
+  padding: 32rpx;
+  border-radius: var(--r-lg);
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: 0 16rpx 34rpx rgba(22, 163, 74, .28);
+}
+/* 右上装饰光斑 */
+.hero::after {
+  content: '';
+  position: absolute; right: -80rpx; top: -90rpx;
+  width: 240rpx; height: 240rpx; border-radius: 50%;
+  background: rgba(255, 255, 255, .13);
+}
+.hero:active { transform: scale(.99); }
+
+.hero-top { display: flex; align-items: center; justify-content: space-between; }
+.hero-badge {
+  font-size: 22rpx; line-height: 1;
+  padding: 8rpx 18rpx; border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, .22);
+}
+.hero-arrow { font-size: 44rpx; line-height: .8; opacity: .9; }
+
+.hero-name { font-size: 42rpx; font-weight: 800; margin-top: 22rpx; letter-spacing: 1rpx; }
+.hero-intro { font-size: 25rpx; opacity: .92; margin-top: 10rpx; line-height: 1.5; }
+
+.hero-stages { margin-top: 26rpx; }
+.stage-chip {
+  display: flex; align-items: center;
+  background: rgba(255, 255, 255, .16);
+  border-radius: var(--r-sm);
+  padding: 14rpx 18rpx;
+  margin-bottom: 14rpx;
+}
+.stage-idx {
+  width: 44rpx; height: 44rpx; border-radius: 50%;
+  background: #fff; color: var(--c-primary-600);
+  font-size: 24rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-right: 16rpx; flex: none;
+}
+.stage-txt { display: flex; align-items: baseline; flex: 1; min-width: 0; }
+.stage-name { font-size: 26rpx; font-weight: 700; }
+.stage-theme { font-size: 24rpx; opacity: .85; margin-left: 14rpx; }
+
+.hero-cta {
+  margin-top: 26rpx;
+  height: 84rpx; border-radius: var(--r-pill);
+  background: #fff; color: var(--c-primary-600);
+  font-size: 28rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---------- 健康资讯 ---------- */
+.news-item { display: flex; padding: 22rpx 0; }
+.news-item + .news-item { border-top: 1rpx solid var(--c-line); }
+
+.news-thumb {
+  position: relative; flex: none;
+  width: 184rpx; height: 140rpx;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.news-img { width: 100%; height: 100%; }
+.news-thumb .badge-new {
+  top: 8rpx; left: 8rpx;
+  padding: 4rpx 14rpx; font-size: 20rpx;
+  box-shadow: none;
+}
+
+.news-body {
+  flex: 1; min-width: 0; margin-left: 22rpx;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.news-title { font-size: 29rpx; font-weight: 600; line-height: 1.42; color: var(--c-text); }
+.news-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12rpx; }
+.news-more { color: var(--c-primary); font-size: 24rpx; font-weight: 500; }

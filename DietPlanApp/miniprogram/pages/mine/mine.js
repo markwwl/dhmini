@@ -20,6 +20,15 @@ Page({
     this.setData({ favs });
     try {
       const summary = await request('/api/checkins/summary');
+      // 日历加工：截成 MM/DD 短日期 + 按当日打卡数分热度等级（0 无 / 1 少 / 2 多）
+      if (summary && summary.calendar) {
+        summary.calendar = summary.calendar.map(c => {
+          const d = String(c.date || '');
+          const md = d.length >= 10 ? d.slice(5, 10).replace('-', '/') : d;
+          const lv = c.count <= 0 ? 0 : (c.count >= 3 ? 2 : 1);
+          return { date: d, md, count: c.count, lv };
+        });
+      }
       this.setData({ summary });
     } catch (e) { console.error(e); }
   },

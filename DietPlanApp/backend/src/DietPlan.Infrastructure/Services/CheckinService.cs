@@ -23,7 +23,7 @@ public class CheckinService
             ?? throw new BizException("餐次槽位不存在", 404);
 
         var day = await _db.PlanDays.AsNoTracking()
-            .Include(d => d.Week).ThenInclude(w => w.Stage)
+            .Include(d => d.Week!).ThenInclude(w => w.Stage)
             .FirstOrDefaultAsync(d => d.Id == mealSlot.PlanDayId)
             ?? throw new BizException("天不存在", 404);
 
@@ -39,7 +39,7 @@ public class CheckinService
     public async Task<int> CheckinDayAsync(int userId, int weekId, int dayNo)
     {
         var day = await _db.PlanDays.AsNoTracking()
-            .Include(d => d.Week).ThenInclude(w => w.Stage)
+            .Include(d => d.Week!).ThenInclude(w => w.Stage)
             .Include(d => d.MealSlots).ThenInclude(m => m.DishItems)
             .FirstOrDefaultAsync(d => d.WeekId == weekId && d.DayNo == dayNo)
             ?? throw new BizException("该天不存在", 404);

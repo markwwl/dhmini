@@ -1,33 +1,44 @@
-<!-- 个人信息：头像（chooseAvatar）+ 昵称（nickname input），本地存储 -->
+<!-- ============================ 我的 ============================ -->
+
+<!-- 头部：渐变 + 头像昵称 -->
 <view class="profile">
   <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
     <image wx:if="{{avatar}}" class="avatar" src="{{avatar}}" mode="aspectFill"/>
     <view wx:else class="avatar avatar-text">{{nickname[0] || '健'}}</view>
   </button>
   <view class="profile-info">
-    <input class="nick" type="nickname" placeholder="点击设置昵称" value="{{nickname}}" bindinput="onNicknameInput"/>
+    <input class="nick" type="nickname" placeholder="点击设置昵称" placeholder-class="nick-ph"
+           value="{{nickname}}" bindinput="onNicknameInput"/>
     <view class="sub">微信授权登录</view>
   </view>
 </view>
 
-<view class="stats" wx:if="{{summary}}">
-  <view class="stat"><view class="num">{{summary.totalDays}}</view><view class="lbl">累计打卡(天)</view></view>
-  <view class="stat"><view class="num">{{summary.streakDays}}</view><view class="lbl">连续打卡(天)</view></view>
-</view>
-<view class="stats" wx:else>
-  <view class="stat"><view class="num">-</view><view class="lbl">累计打卡(天)</view></view>
-  <view class="stat"><view class="num">-</view><view class="lbl">连续打卡(天)</view></view>
+<!-- 打卡统计（上浮卡） -->
+<view class="stats">
+  <view class="stat">
+    <view class="stat-num">{{summary ? summary.totalDays : '-'}}</view>
+    <view class="stat-lbl">累计打卡（天）</view>
+  </view>
+  <view class="stat-sep"></view>
+  <view class="stat">
+    <view class="stat-num">{{summary ? summary.streakDays : '-'}}</view>
+    <view class="stat-lbl">连续打卡（天）</view>
+  </view>
 </view>
 
 <!-- 收藏的菜品（需求 4.6） -->
 <view class="card">
-  <view class="card-title">收藏的菜品（{{favs.length}}）</view>
+  <view class="card-head">
+    <view class="card-title">收藏的菜品</view>
+    <text class="card-more">{{favs.length}} 道</text>
+  </view>
   <view wx:if="{{favs.length}}">
     <view class="fav" wx:for="{{favs}}" wx:key="id" data-id="{{item.id}}" bindtap="goFav">
-      <image class="fav-img" src="{{item.image}}" mode="aspectFill" wx:if="{{item.image}}"/>
+      <image wx:if="{{item.image}}" class="fav-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
+      <view wx:else class="fav-img img-ph"></view>
       <view class="fav-info">
-        <view class="fav-name">{{item.name}}</view>
-        <view class="fav-sub" wx:if="{{item.subtitle}}">{{item.subtitle}}</view>
+        <view class="fav-name ellipsis">{{item.name}}</view>
+        <view class="fav-sub ellipsis" wx:if="{{item.subtitle}}">{{item.subtitle}}</view>
       </view>
       <text class="fav-go">查看 ›</text>
     </view>
@@ -35,12 +46,24 @@
   <view wx:else class="empty-sm">还没有收藏，去菜品页点「喜欢」吧</view>
 </view>
 
+<!-- 近 30 天打卡日历（热力） -->
 <view class="card" wx:if="{{summary && summary.calendar.length}}">
-  <view class="card-title">近30天打卡日历</view>
+  <view class="card-head">
+    <view class="card-title">近 30 天打卡</view>
+  </view>
   <view class="cal">
-    <view wx:for="{{summary.calendar}}" wx:key="date" class="cal-day">
-      <view class="cal-date">{{item.date}}</view>
-      <view class="cal-count">{{item.count}}项</view>
+    <view wx:for="{{summary.calendar}}" wx:key="date" class="cal-cell cal-lv{{item.lv}}">
+      <text class="cal-md">{{item.md}}</text>
+      <text class="cal-cnt">{{item.count || 0}}</text>
     </view>
   </view>
+  <view class="cal-legend">
+    <text class="cal-legend-txt">少</text>
+    <view class="cal-swatch cal-lv0"></view>
+    <view class="cal-swatch cal-lv1"></view>
+    <view class="cal-swatch cal-lv2"></view>
+    <text class="cal-legend-txt">多</text>
+  </view>
 </view>
+
+<view class="safe-bottom"></view>

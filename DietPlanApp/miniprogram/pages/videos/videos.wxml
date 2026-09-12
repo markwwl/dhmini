@@ -1,6 +1,25 @@
-<view wx:for="{{videos}}" wx:key="id" class="vcard" data-url="{{item.url}}" bindtap="play">
-  <image class="vcover" src="{{item.image}}" mode="aspectFill" lazy-load/>
-  <view wx:if="{{item.isNew}}" class="badge-new">上新</view>
-  <view class="vtitle">{{item.title}}</view>
+<!-- ============================ 视频秀 ============================ -->
+
+<view class="vhead">
+  <view class="vhead-title">视频秀</view>
+  <view class="vhead-sub">跟着视频学做健康餐</view>
 </view>
-<view wx:if="{{!videos.length}}" class="empty">暂无视频内容</view>
+
+<view wx:for="{{videos}}" wx:key="id" class="vcard" data-url="{{item.url}}" bindtap="play">
+  <view class="vcover-box">
+    <image class="vcover" src="{{item.image}}" mode="aspectFill" lazy-load/>
+    <view wx:if="{{item.isNew}}" class="badge-new">上新</view>
+    <view class="play-btn"><view class="play-tri"></view></view>
+  </view>
+  <view class="vbody">
+    <view class="vtitle ellipsis-2">{{item.title}}</view>
+    <text class="vgo">播放 ›</text>
+  </view>
+</view>
+
+<view wx:if="{{!videos.length}}" class="empty">
+  <view class="empty-icon">🎬</view>
+  <view>暂无视频内容</view>
+</view>
+
+<view class="safe-bottom"></view>

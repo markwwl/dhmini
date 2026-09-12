@@ -1,30 +1,71 @@
+<!-- ============================ 首页 ============================ -->
+
+<!-- Banner：圆角卡 + 标题叠层 + 自定义指示点 -->
 <view class="banners" wx:if="{{banners.length}}">
-  <swiper autoplay circular indicator-dots style="height:340rpx">
+  <swiper class="banner-swiper" autoplay circular interval="4000" duration="500" bindchange="onBannerChange">
     <swiper-item wx:for="{{banners}}" wx:key="id">
-      <image src="{{item.image}}" mode="aspectFill" style="width:100%;height:340rpx;border-radius:16rpx"/>
+      <view class="banner-item">
+        <image class="banner-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
+        <view wx:if="{{item.title}}" class="banner-mask">
+          <text class="banner-title">{{item.title}}</text>
+        </view>
+      </view>
     </swiper-item>
   </swiper>
-</view>
-
-<view class="card" wx:if="{{plan}}" bindtap="goPlan">
-  <view style="font-size:34rpx;font-weight:700">{{plan.name}}</view>
-  <view style="color:#616161;margin-top:8rpx">{{plan.intro}}</view>
-  <view wx:for="{{plan.tree.stages}}" wx:key="id" style="margin-top:16rpx">
-    <view style="font-weight:600;color:#1565C0">{{item.name}} · {{item.theme}}</view>
-    <view wx:for="{{item.weeks}}" wx:for-item="w" wx:key="id" style="display:inline-block;background:#eef4fb;color:#1565C0;border-radius:24rpx;padding:6rpx 20rpx;margin:8rpx 8rpx 0 0;font-size:24rpx">{{w.label}}（{{w.dayCount}}天）</view>
+  <view class="banner-dots" wx:if="{{banners.length > 1}}">
+    <view wx:for="{{banners}}" wx:key="id" class="dot {{bannerIndex === index ? 'dot-on' : ''}}"></view>
   </view>
-  <button class="btn-primary" style="margin-top:24rpx">查看方案 ›</button>
 </view>
 
+<!-- 当前推荐方案（Hero 卡） -->
+<view class="hero" wx:if="{{plan}}" bindtap="goPlan">
+  <view class="hero-top">
+    <view class="hero-badge">当前推荐</view>
+    <view class="hero-arrow">›</view>
+  </view>
+  <view class="hero-name">{{plan.name}}</view>
+  <view class="hero-intro">{{plan.intro}}</view>
+
+  <view class="hero-stages">
+    <view class="stage-chip" wx:for="{{plan.tree.stages}}" wx:key="id">
+      <view class="stage-idx">{{index + 1}}</view>
+      <view class="stage-txt">
+        <text class="stage-name">{{item.name}}</text>
+        <text class="stage-theme">{{item.theme}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="hero-cta">进入方案 · 共 {{plan.stageCount}} 个阶段</view>
+</view>
+
+<view class="card" wx:else>
+  <view class="empty">
+    <view class="empty-icon">🥗</view>
+    <view>暂无上线方案，请在后台配置</view>
+  </view>
+</view>
+
+<!-- 健康资讯 -->
 <view class="card news" wx:if="{{news.length}}">
-  <view class="card-title">健康资讯</view>
+  <view class="card-head">
+    <view class="card-title">健康资讯</view>
+  </view>
+
   <view wx:for="{{news}}" wx:key="id" class="news-item">
-    <image wx:if="{{item.image}}" class="news-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
+    <view class="news-thumb">
+      <image wx:if="{{item.image}}" class="news-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
+      <view wx:else class="news-img img-ph"></view>
+      <view wx:if="{{item.isNew}}" class="badge-new">上新</view>
+    </view>
     <view class="news-body">
-      <view class="news-title">{{item.title}}</view>
-      <view wx:if="{{item.url}}" class="news-link">查看详情 ›</view>
+      <view class="news-title ellipsis-2">{{item.title}}</view>
+      <view class="news-foot">
+        <text class="tag tag-green">健康科普</text>
+        <text wx:if="{{item.url}}" class="news-more">查看详情 ›</text>
+      </view>
     </view>
   </view>
 </view>
 
-<view class="card" wx:else style="text-align:center;color:#999">暂无上线方案，请在后台配置</view>
+<view class="safe-bottom"></view>

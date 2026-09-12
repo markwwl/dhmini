@@ -1,18 +1,50 @@
+<!-- ============================ 方案页（L1） ============================ -->
 <view wx:if="{{plan}}" class="wrap">
-  <view class="nav">
-    <view wx:for="{{stages}}" wx:key="id" class="nav-item {{activeStage === index ? 'nav-item-active' : ''}}" data-idx="{{index}}" bindtap="tapStage">{{item.name}}</view>
+  <!-- 方案头 -->
+  <view class="plan-head">
+    <view class="plan-name">{{plan.name}}</view>
+    <view class="plan-intro">{{plan.intro}}</view>
+    <view class="plan-meta">
+      <text class="plan-meta-item">{{stages.length}} 个阶段</text>
+      <text class="plan-meta-dot">·</text>
+      <text class="plan-meta-item">按周推进</text>
+    </view>
   </view>
 
-  <view wx:for="{{stages}}" wx:for-item="stage" wx:key="id" id="stage-{{index}}" class="stage-block">
-    <view class="stage-title">{{stage.name}} · {{stage.theme}}</view>
-    <view class="week-card" wx:for="{{stage.weeks}}" wx:for-item="w" wx:key="id" data-week-id="{{w.id}}" data-daycount="{{w.dayCount}}" data-stage="{{stage.name}} {{stage.theme}}" data-label="{{w.label}}" bindtap="goDay">
-      <image class="week-cover" src="{{w.coverImage}}" mode="aspectFill" lazy-load/>
-      <view class="week-info">
-        <view class="week-label">{{w.label}}</view>
-        <view class="week-theme">{{w.theme}}</view>
-        <view class="week-go">查看方案 ›</view>
+  <!-- 每个阶段一行：左侧时间轴节点 + 阶段名，右侧阶段主题 + 周卡片；整行随页面一起滚动 -->
+  <view class="row" wx:for="{{stages}}" wx:for-item="stage" wx:for-index="si" wx:key="id">
+    <view class="tl">
+      <!-- 竖线：首行不向上出头、末行不向下出头，形成连续时间轴 -->
+      <view class="tl-axis {{si === 0 ? 'tl-axis-first' : ''}} {{si === stages.length - 1 ? 'tl-axis-last' : ''}}"></view>
+      <view class="tl-dot {{activeStage === si ? 'tl-dot-active' : ''}}"></view>
+      <view class="tl-name {{activeStage === si ? 'tl-name-active' : ''}}" data-idx="{{si}}" bindtap="tapStage">{{stage.name}}</view>
+    </view>
+
+    <view id="stage-{{si}}" class="stage-block">
+      <view class="stage-title">{{stage.theme}}</view>
+
+      <view class="week-card" wx:for="{{stage.weeks}}" wx:for-item="w" wx:key="id"
+            data-week-id="{{w.id}}" data-daycount="{{w.dayCount}}"
+            data-stage="{{stage.name}} {{stage.theme}}" data-label="{{w.label}}" bindtap="goDay">
+        <view class="week-cover-box">
+          <image class="week-cover" src="{{w.coverImage}}" mode="aspectFill" lazy-load/>
+          <view class="week-label">{{w.label}}</view>
+        </view>
+        <view class="week-info">
+          <view class="week-theme ellipsis-2">{{w.theme}}</view>
+          <view class="week-meta">
+            <text class="week-days">{{w.dayCount}} 天食谱</text>
+            <text class="week-go">查看 ›</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
+
+  <view class="safe-bottom"></view>
 </view>
-<view wx:else class="empty">暂无上线方案</view>
+
+<view wx:else class="empty">
+  <view class="empty-icon">📋</view>
+  <view>暂无上线方案</view>
+</view>

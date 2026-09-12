@@ -1,21 +1,41 @@
+<!-- ============================ 更换菜品（L4） ============================ -->
+
+<!-- 搜索 -->
 <view class="search-bar">
-  <input class="search-input" placeholder="搜索您想替换的菜品" value="{{keyword}}" bindinput="onSearch" bindconfirm="doSearch"/>
-  <button class="search-btn" size="mini" bindtap="doSearch">搜索</button>
+  <view class="search-box">
+    <text class="search-icon">🔍</text>
+    <input class="search-input" placeholder="搜索您想替换的菜品" value="{{keyword}}"
+           bindinput="onSearch" bindconfirm="doSearch" confirm-type="search"/>
+  </view>
+  <view class="search-btn" bindtap="doSearch">搜索</view>
 </view>
 
 <view class="tip">仅可在同类型候选菜品中更换，保证营养结构均衡</view>
 
-<view class="cand {{selected === item.dishId ? 'cand-active' : ''}}" wx:for="{{candidates}}" wx:key="dishId" data-id="{{item.dishId}}" bindtap="select">
-  <view class="radio">{{selected === item.dishId ? '●' : '○'}}</view>
-  <image class="cand-img" src="{{item.image}}" mode="aspectFill"/>
+<!-- 候选列表 -->
+<view class="cand {{selected === item.dishId ? 'cand-active' : ''}}" wx:for="{{candidates}}" wx:key="dishId"
+      data-id="{{item.dishId}}" bindtap="select">
+  <view class="radio {{selected === item.dishId ? 'radio-on' : ''}}">
+    <text wx:if="{{selected === item.dishId}}" class="radio-tick">✓</text>
+  </view>
+  <image class="cand-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
   <view class="cand-info">
-    <view class="cand-name">{{item.name}} <text wx:if="{{item.isCurrent}}" class="current-tag">当前</text></view>
-    <view class="cand-ing">{{item.ingredientsSummary}}</view>
+    <view class="cand-name">
+      <text class="cand-name-txt ellipsis">{{item.name}}</text>
+      <text wx:if="{{item.isCurrent}}" class="current-tag">当前</text>
+    </view>
+    <view class="cand-ing ellipsis-2">{{item.ingredientsSummary}}</view>
     <text class="cand-link" data-id="{{item.dishId}}" catchtap="goDish">查看制作方法 ›</text>
   </view>
 </view>
 
-<view style="height:140rpx"></view>
+<view wx:if="{{!candidates.length}}" class="empty">
+  <view class="empty-icon">🔍</view>
+  <view>没有找到可替换的菜品</view>
+</view>
+
+<view class="safe-bottom"></view>
+
 <view class="bottom-bar">
   <button class="confirm-btn" bindtap="confirm">确认更换</button>
 </view>

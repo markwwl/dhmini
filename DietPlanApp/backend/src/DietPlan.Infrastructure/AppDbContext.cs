@@ -66,6 +66,14 @@ public class AppDbContext : DbContext
         // 后台用户名唯一
         modelBuilder.Entity<AdminUser>().HasIndex(a => a.Username).IsUnique();
 
+        // 候选组 → 成员：外键为 GroupId（不符合默认命名约定，必须显式映射，
+        // 否则 EF 会另建影子外键，Include(g => g.Items) 查不到成员）
+        modelBuilder.Entity<DishCandidateGroup>()
+            .HasMany(g => g.Items)
+            .WithOne()
+            .HasForeignKey(i => i.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         // 周内天序号唯一
         modelBuilder.Entity<PlanDay>().HasIndex(d => new { d.WeekId, d.DayNo }).IsUnique();
     }

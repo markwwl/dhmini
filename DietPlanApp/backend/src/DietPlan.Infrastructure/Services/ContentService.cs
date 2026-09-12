@@ -98,7 +98,7 @@ public class ContentService
         {
             WeekId = weekId,
             DayNo = dayNo,
-            PlanId = week.Stage.PlanId,
+            PlanId = week.Stage!.PlanId,
             StageId = week.StageId,
             Meals = day.MealSlots.Select(m => new MealDto
             {

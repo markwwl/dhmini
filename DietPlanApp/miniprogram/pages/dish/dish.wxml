@@ -1,34 +1,65 @@
+<!-- ============================ 菜品制作解析（L3） ============================ -->
 <view wx:if="{{dish}}">
-  <swiper autoplay circular indicator-dots wx:if="{{dish.images.length}}" style="height:480rpx">
-    <swiper-item wx:for="{{dish.images}}" wx:key="*this">
-      <image src="{{item}}" mode="aspectFill" lazy-load style="width:100%;height:480rpx"/>
-    </swiper-item>
-  </swiper>
+  <!-- 图集 -->
+  <view class="gallery">
+    <swiper wx:if="{{dish.images.length}}" class="gallery-swiper" autoplay circular
+            indicator-dots indicator-color="rgba(255,255,255,.45)" indicator-active-color="#ffffff">
+      <swiper-item wx:for="{{dish.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" lazy-load class="gallery-img"/>
+      </swiper-item>
+    </swiper>
+    <view wx:else class="gallery-img img-ph"></view>
 
+    <!-- 收藏 -->
+    <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="toggleLike">
+      <text class="like-heart">{{liked ? '♥' : '♡'}}</text>
+      <text class="like-txt">{{liked ? '已喜欢' : '喜欢'}}</text>
+    </view>
+  </view>
+
+  <!-- 菜名信息卡（轻微上浮压住图集下沿） -->
   <view class="head">
-    <view>
+    <view class="head-main">
       <view class="name">{{dish.name}}</view>
-      <view class="sub">{{dish.subtitle}}</view>
+      <view class="sub" wx:if="{{dish.subtitle}}">{{dish.subtitle}}</view>
     </view>
-    <view class="like {{liked ? 'liked' : ''}}" bindtap="toggleLike">{{liked ? '♥ 已喜欢' : '♡ 喜欢这道菜'}}</view>
+    <view wx:if="{{dish.category}}" class="tag tag-green">{{dish.category}}</view>
   </view>
 
+  <!-- 食材清单 -->
   <view class="card">
-    <view class="card-title">食材清单（{{dish.category}}）</view>
+    <view class="card-head">
+      <view class="card-title">食材清单</view>
+      <text class="card-more">{{dish.ingredients.length}} 项</text>
+    </view>
     <view class="ing" wx:for="{{dish.ingredients}}" wx:key="index">
-      <text>{{item.name}}</text><text class="amount">{{item.amount}}</text>
+      <view class="ing-name">
+        <image wx:if="{{item.image}}" class="ing-thumb" src="{{item.image}}" mode="aspectFill" lazy-load/>
+        <text>{{item.name}}</text>
+      </view>
+      <text class="amount">{{item.amount}}</text>
     </view>
   </view>
 
+  <!-- 制作步骤 -->
   <view class="card">
-    <view class="card-title">制作步骤</view>
+    <view class="card-head">
+      <view class="card-title">制作步骤</view>
+      <text class="card-more">{{dish.steps.length}} 步</text>
+    </view>
     <view class="step" wx:for="{{dish.steps}}" wx:key="index">
       <view class="step-no">{{index + 1}}</view>
       <view class="step-body">
-        <text>{{item.text}}</text>
+        <text class="step-text">{{item.text}}</text>
         <image wx:if="{{item.image}}" src="{{item.image}}" mode="widthFix" lazy-load class="step-img"/>
       </view>
     </view>
   </view>
+
+  <view class="safe-bottom"></view>
 </view>
-<view wx:else class="empty">加载中…</view>
+
+<view wx:else class="empty">
+  <view class="empty-icon">🍳</view>
+  <view>加载中…</view>
+</view>

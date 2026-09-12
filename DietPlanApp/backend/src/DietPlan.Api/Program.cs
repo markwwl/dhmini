@@ -30,13 +30,22 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 // ---------- 业务服务 ----------
 builder.Services.AddHttpClient("wx");
+// 本地联调开关：开启后 wx-login 直接落到演示账号（AppDbContext 里的 demo_openid_0001），
+// 使小程序手工测试时用户态数据（打卡/统计）也有内容。生产环境禁止开启。
+var useDemoLogin = builder.Configuration.GetValue<bool>("Wx:UseDemoLogin");
+if (useDemoLogin && builder.Environment.IsProduction())
+{
+    throw new InvalidOperationException("Wx:UseDemoLogin 不得在生产环境开启");
+}
 builder.Services.AddScoped<WeChatService>(sp =>
 {
     var http = sp.GetRequiredService<IHttpClientFactory>();
     return new WeChatService(
         http,
         builder.Configuration["Wx:AppId"] ?? string.Empty,
-        builder.Configuration["Wx:AppSecret"] ?? string.Empty);
+        builder.Configuration["Wx:AppSecret"] ?? string.Empty,
+        useDemoLogin,
+        builder.Configuration["Wx:DemoOpenId"] ?? "demo_openid_0001");
 });
 var jwtKey = builder.Configuration["Jwt:Key"] ?? string.Empty;
 // 安全：生产环境必须显式配置强随机 JWT 密钥，否则拒绝启动（防伪造 token）
@@ -112,6 +121,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
+
+    // 演示数据：InMemory（本地无库）或在 Development 环境下的空库（如 LocalDB）都灌，
+    // 保证"起服务就有数据可浏览"；生产环境绝不灌。Seed 内部幂等（库中已有方案则跳过）。
+    if (string.Equals(dbProvider, "InMemory", StringComparison.OrdinalIgnoreCase) || app.Environment.IsDevelopment())
+    {
+        DietPlan.Api.DemoDataSeeder.Seed(db);
+    }
 
     if (!db.AdminUsers.Any())
     {

@@ -1,14 +1,92 @@
-.head { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 24rpx; }
-.name { font-size: 34rpx; font-weight: 700; }
-.sub { color: #757575; font-size: 24rpx; margin-top: 6rpx; }
-.like { color: #e53935; font-size: 24rpx; }
-.liked { font-weight: 700; }
-.card { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 24rpx; }
-.card-title { font-weight: 700; margin-bottom: 16rpx; }
-.ing { display: flex; justify-content: space-between; padding: 10rpx 0; border-bottom: 1rpx dashed #eee; }
-.amount { color: #1565C0; }
-.step { display: flex; margin-bottom: 20rpx; }
-.step-no { width: 40rpx; height: 40rpx; border-radius: 50%; background: #1565C0; color: #fff; text-align: center; line-height: 40rpx; font-size: 24rpx; flex-shrink: 0; margin-right: 16rpx; }
-.step-body { flex: 1; }
-.step-img { width: 100%; border-radius: 12rpx; margin-top: 12rpx; }
-.empty { text-align: center; color: #999; padding-top: 200rpx; }
+/* ============================ 菜品制作解析（L3）============================ */
+
+/* ---------- 图集 ---------- */
+.gallery { position: relative; }
+.gallery-swiper,
+.gallery-img { width: 100%; height: 520rpx; }
+.gallery-img { background: #E7EFE8; }
+
+.like-btn {
+  position: absolute;
+  right: 28rpx;
+  top: 28rpx;
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, .14);
+}
+.like-btn:active { transform: scale(.95); }
+.like-heart { color: var(--c-danger); font-size: 32rpx; margin-right: 8rpx; line-height: 1; }
+.like-txt { font-size: 24rpx; font-weight: 600; color: var(--c-text-2); }
+.liked .like-txt { color: var(--c-danger); }
+
+/* ---------- 头部信息（上浮压住图集） ---------- */
+.head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: -40rpx var(--sp) 0;
+  padding: 30rpx 28rpx;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-2);
+}
+.head-main { flex: 1; min-width: 0; }
+.name { font-size: 38rpx; font-weight: 800; letter-spacing: .5rpx; }
+.sub { color: var(--c-text-2); font-size: 25rpx; margin-top: 10rpx; line-height: 1.5; }
+
+/* ---------- 食材清单 ---------- */
+.ing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+}
+.ing + .ing { border-top: 1rpx dashed #E6EFE8; }
+.ing-name { display: flex; align-items: center; font-size: 28rpx; color: var(--c-text); }
+.ing-thumb {
+  width: 56rpx; height: 56rpx;
+  border-radius: 10rpx;
+  margin-right: 16rpx;
+  background: #E7EFE8;
+  flex: none;
+}
+.amount { color: var(--c-primary-600); font-size: 28rpx; font-weight: 600; }
+
+/* ---------- 制作步骤 ---------- */
+.step {
+  position: relative;
+  display: flex;
+  padding-bottom: 28rpx;
+}
+.step:last-child { padding-bottom: 0; }
+/* 步骤之间的连接线 */
+.step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 23rpx;
+  top: 56rpx;
+  bottom: 4rpx;
+  width: 2rpx;
+  background: var(--c-line);
+}
+.step-no {
+  width: 48rpx; height: 48rpx;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin-right: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(22, 163, 74, .3);
+}
+.step-body { flex: 1; min-width: 0; padding-top: 6rpx; }
+.step-text { font-size: 28rpx; line-height: 1.65; color: var(--c-text); }
+.step-img { width: 100%; border-radius: var(--r-sm); margin-top: 16rpx; }

@@ -1,5 +1,218 @@
-/* 全局样式 */
-page { background: #f6f7fb; font-size: 28rpx; color: #212121; }
-.card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin: 16rpx 24rpx; }
-.btn-primary { background: #1565C0; color: #fff; border-radius: 40rpx; font-size: 28rpx; }
-.tag-checked { background: #e8f5e9; color: #2e7d32; border-radius: 20rpx; font-size: 22rpx; padding: 4rpx 16rpx; }
+/* ============================================================
+   健康饮食小程序 · 设计系统 v2 —— 「清新自然绿」
+   颜色 / 圆角 / 阴影 / 间距 全部走 CSS 变量；页面只引用令牌，不写死色值
+   ============================================================ */
+
+page {
+  /* —— 品牌色：清新自然绿 —— */
+  --c-primary:      #16A34A;
+  --c-primary-600:  #15803D;
+  --c-primary-300:  #6EE7A0;
+  --c-primary-100:  #DCFCE7;
+  --c-primary-50:   #EFFBF3;
+  --grad-primary:   linear-gradient(135deg, #3DDC84 0%, #16A34A 100%);
+  --grad-header:    linear-gradient(160deg, #1FA85C 0%, #12833F 100%);
+  --grad-primary-soft: linear-gradient(135deg, #EFFBF3 0%, #DCF6E6 100%);
+
+  /* —— 强调色：暖橙（食欲 / 提示）—— */
+  --c-accent:       #FF7A45;
+  --c-accent-600:   #F1622B;
+  --c-accent-50:    #FFF3EC;
+
+  /* —— 语义色 —— */
+  --c-danger:       #F5483B;
+  --c-warn:         #F5A524;
+  --c-info:         #3B82F6;
+  --c-info-50:      #EEF4FF;
+
+  /* —— 中性 —— */
+  --c-bg:     #F4F8F4;
+  --c-card:   #FFFFFF;
+  --c-text:   #14231A;
+  --c-text-2: #5C6B61;
+  --c-text-3: #98A69D;
+  --c-line:   #EDF3EE;
+
+  /* —— 圆角 —— */
+  --r-sm:   14rpx;
+  --r-md:   24rpx;
+  --r-lg:   32rpx;
+  --r-pill: 999rpx;
+
+  /* —— 阴影 —— */
+  --sh-1:       0 4rpx 16rpx rgba(20, 60, 35, .05);
+  --sh-2:       0 10rpx 30rpx rgba(20, 60, 35, .08);
+  --sh-primary: 0 12rpx 24rpx rgba(22, 163, 74, .26);
+
+  /* —— 页面水平留白 —— */
+  --sp: 24rpx;
+
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text, image, scroll-view, swiper, input, button { box-sizing: border-box; }
+image { display: block; }
+
+/* ============================ 卡片 ============================ */
+.card {
+  background: var(--c-card);
+  border-radius: var(--r-md);
+  padding: 28rpx;
+  margin: 20rpx var(--sp);
+  box-shadow: var(--sh-1);
+}
+.card-flat { box-shadow: none; }
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--c-text);
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+}
+/* 标题前的品牌色小竖条 */
+.card-title::before {
+  content: '';
+  width: 8rpx;
+  height: 28rpx;
+  border-radius: 4rpx;
+  background: var(--grad-primary);
+  margin-right: 14rpx;
+}
+.card-more {
+  font-size: 24rpx;
+  color: var(--c-primary);
+  font-weight: 500;
+}
+
+/* ============================ 区块标题 ============================ */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 32rpx var(--sp) 8rpx;
+}
+.section-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  letter-spacing: .5rpx;
+}
+.section-more { color: var(--c-primary); font-size: 24rpx; }
+
+/* ============================ 按钮 ============================ */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  padding: 0 36rpx;
+  border-radius: var(--r-pill);
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+  border: none;
+}
+.btn::after { border: none; }
+.btn-primary {
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: var(--sh-primary);
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--c-primary);
+  border: 2rpx solid var(--c-primary-300);
+}
+.btn-plain {
+  background: var(--c-primary-50);
+  color: var(--c-primary-600);
+}
+.btn-block { width: 100%; }
+.btn:active { opacity: .88; transform: scale(.985); }
+
+/* ============================ 标签 / 胶囊 ============================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 22rpx;
+  line-height: 1;
+  padding: 8rpx 18rpx;
+  border-radius: var(--r-pill);
+  font-weight: 500;
+}
+.tag-green  { background: var(--c-primary-100); color: var(--c-primary-600); }
+.tag-orange { background: var(--c-accent-50);    color: var(--c-accent-600); }
+.tag-gray   { background: #F1F4F1;               color: var(--c-text-2); }
+.tag-info   { background: var(--c-info-50);      color: var(--c-info); }
+
+/* 上新角标（视频 / 资讯） */
+.badge-new {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  z-index: 2;
+  padding: 8rpx 20rpx;
+  border-radius: var(--r-pill);
+  background: var(--grad-primary);
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 1;
+  font-weight: 600;
+  box-shadow: 0 6rpx 16rpx rgba(22, 163, 74, .35);
+}
+
+/* ============================ 空状态 ============================ */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 140rpx 60rpx;
+  color: var(--c-text-3);
+  font-size: 26rpx;
+}
+.empty-icon {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: var(--grad-primary-soft, linear-gradient(135deg, #EFFBF3, #DCF6E6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64rpx;
+  margin-bottom: 28rpx;
+  color: var(--c-primary);
+}
+
+/* ============================ 布局工具类 ============================ */
+.row      { display: flex; align-items: center; }
+.between  { display: flex; align-items: center; justify-content: space-between; }
+.center   { display: flex; align-items: center; justify-content: center; }
+.grow     { flex: 1; min-width: 0; }
+.muted    { color: var(--c-text-2); }
+.hint     { color: var(--c-text-3); font-size: 24rpx; }
+.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.divider  { height: 1rpx; background: var(--c-line); margin: 20rpx 0; }
+.safe-bottom { height: calc(160rpx + env(safe-area-inset-bottom)); }
+.text-primary { color: var(--c-primary); }
+
+/* ============================ 图片占位背景 ============================ */
+.img-ph { background: linear-gradient(135deg, #F1F6F1, #E7F0E8); }

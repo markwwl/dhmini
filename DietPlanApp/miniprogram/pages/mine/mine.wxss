@@ -1,25 +1,90 @@
-.profile { display: flex; align-items: center; background: #1565C0; padding: 48rpx 32rpx; color: #fff; }
+/* ============================ 我的 ============================ */
+
+/* ---------- 头部 ---------- */
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 40rpx var(--sp) 76rpx;
+  background: var(--grad-header);
+  color: #fff;
+}
 .avatar-btn { margin: 0; padding: 0; background: transparent; line-height: 1; }
 .avatar-btn::after { border: none; }
-.avatar { width: 100rpx; height: 100rpx; border-radius: 50%; background: rgba(255,255,255,.25); text-align: center; line-height: 100rpx; font-size: 44rpx; }
-.avatar-text { color: #1565C0; background: #fff; }
-.profile-info { margin-left: 24rpx; flex: 1; }
-.nick { font-size: 34rpx; font-weight: 700; color: #fff; min-height: 48rpx; }
-.sub { font-size: 22rpx; opacity: .8; margin-top: 6rpx; }
-.stats { display: flex; background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 28rpx 0; }
+.avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .25);
+  text-align: center;
+  line-height: 112rpx;
+  font-size: 46rpx;
+  border: 4rpx solid rgba(255, 255, 255, .5);
+}
+.avatar-text { color: var(--c-primary-600); background: #fff; }
+.profile-info { margin-left: 26rpx; flex: 1; min-width: 0; }
+.nick { font-size: 38rpx; font-weight: 800; color: #fff; min-height: 52rpx; }
+.nick-ph { color: rgba(255, 255, 255, .72); }
+.sub { font-size: 23rpx; opacity: .85; margin-top: 8rpx; }
+
+/* ---------- 统计卡（上浮压住头部） ---------- */
+.stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  margin: -52rpx var(--sp) 0;
+  padding: 34rpx 0;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-2);
+}
 .stat { flex: 1; text-align: center; }
-.num { font-size: 44rpx; font-weight: 700; color: #1565C0; }
-.lbl { color: #757575; font-size: 22rpx; margin-top: 6rpx; }
-.card { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; padding: 24rpx; }
-.card-title { font-weight: 700; margin-bottom: 16rpx; }
-.cal { display: flex; flex-wrap: wrap; gap: 12rpx; }
-.cal-day { background: #f0f2f5; border-radius: 12rpx; padding: 10rpx 14rpx; text-align: center; }
-.cal-date { font-size: 22rpx; color: #616161; }
-.cal-count { font-size: 22rpx; color: #1565C0; font-weight: 700; }
-.fav { display: flex; align-items: center; padding: 16rpx 0; border-top: 1rpx solid #f0f0f0; }
-.fav-img { width: 96rpx; height: 96rpx; border-radius: 12rpx; background: #f0f2f5; flex-shrink: 0; }
-.fav-info { flex: 1; margin-left: 20rpx; }
-.fav-name { font-weight: 600; font-size: 28rpx; }
-.fav-sub { color: #757575; font-size: 22rpx; margin-top: 4rpx; }
-.fav-go { color: #1565C0; font-size: 24rpx; }
-.empty-sm { color: #999; font-size: 24rpx; text-align: center; padding: 20rpx 0; }
+.stat-sep { width: 1rpx; height: 64rpx; background: var(--c-line); }
+.stat-num { font-size: 48rpx; font-weight: 800; color: var(--c-primary-600); line-height: 1.1; }
+.stat-lbl { color: var(--c-text-3); font-size: 23rpx; margin-top: 8rpx; }
+
+/* ---------- 收藏列表 ---------- */
+.fav { display: flex; align-items: center; padding: 20rpx 0; }
+.fav + .fav { border-top: 1rpx solid var(--c-line); }
+.fav-img {
+  width: 100rpx; height: 100rpx;
+  border-radius: var(--r-sm);
+  background: #E7EFE8;
+  flex: none;
+}
+.fav-info { flex: 1; min-width: 0; margin-left: 20rpx; }
+.fav-name { font-weight: 700; font-size: 29rpx; color: var(--c-text); }
+.fav-sub { color: var(--c-text-3); font-size: 23rpx; margin-top: 6rpx; }
+.fav-go { flex: none; color: var(--c-primary); font-size: 24rpx; font-weight: 500; }
+.empty-sm { color: var(--c-text-3); font-size: 24rpx; text-align: center; padding: 40rpx 0; }
+
+/* ---------- 打卡热力日历 ---------- */
+.cal { display: flex; flex-wrap: wrap; margin: 0 -6rpx; }
+.cal-cell {
+  width: calc(14% - 12rpx);
+  margin: 6rpx;
+  height: 78rpx;
+  border-radius: 12rpx;
+  background: #F2F6F2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.cal-md { font-size: 18rpx; line-height: 1.1; color: var(--c-text-3); }
+.cal-cnt { font-size: 20rpx; line-height: 1.3; font-weight: 700; color: var(--c-text-3); }
+
+.cal-lv0 { background: #F2F6F2; }
+.cal-lv1 { background: #C6EBD3; }
+.cal-lv2 { background: var(--c-primary); }
+.cal-lv1 .cal-md, .cal-lv1 .cal-cnt { color: #14532D; }
+.cal-lv2 .cal-md, .cal-lv2 .cal-cnt { color: #fff; }
+
+.cal-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+}
+.cal-legend-txt { font-size: 22rpx; color: var(--c-text-3); margin: 0 10rpx; }
+.cal-swatch { width: 26rpx; height: 26rpx; border-radius: 6rpx; margin-right: 8rpx; }

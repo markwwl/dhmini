@@ -4,42 +4,115 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>健康饮食方案 · 管理后台</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/index.css">
-<script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/index.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.5/dist/locale/zh-cn.min.js"></script>
+<!-- 前端库本地内置（vendor/），不依赖外部 CDN：离线 / 内嵌 webview / 内网环境均可正常渲染 -->
+<link rel="stylesheet" href="vendor/element-plus.css">
+<script src="vendor/vue.global.prod.js"></script>
+<script src="vendor/element-plus.full.min.js"></script>
+<script src="vendor/element-plus.zh-cn.min.js"></script>
 <style>
-body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7fa; }
-.login-box { width: 360px; margin: 15vh auto; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+/* 品牌主题：清新自然绿 —— 覆盖 Element Plus 主题变量 */
+:root {
+  --el-color-primary: #16A34A;
+  --el-color-primary-light-3: #5CBF80;
+  --el-color-primary-light-5: #8BD1A5;
+  --el-color-primary-light-7: #B9E3C9;
+  --el-color-primary-light-8: #D0EDDB;
+  --el-color-primary-light-9: #E8F6ED;
+  --el-color-primary-dark-2: #12823B;
+  --el-border-radius-base: 8px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #F4F8F4;
+  color: #14231A;
+}
+
+/* ---------- 登录 ---------- */
+.login-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #1FA85C 0%, #12833F 55%, #0E6B33 100%);
+}
+.login-box {
+  width: 380px; padding: 40px 36px;
+  background: #fff; border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(8, 40, 22, .28);
+}
+.login-logo {
+  width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px;
+  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 26px; font-weight: 800;
+  box-shadow: 0 8px 20px rgba(22, 163, 74, .35);
+}
+.login-title { text-align: center; margin: 0 0 6px; font-size: 19px; font-weight: 700; color: #14231A; }
+.login-sub { text-align: center; margin: 0 0 26px; font-size: 12px; letter-spacing: 1px; color: #98A69D; }
+
+/* ---------- 布局 ---------- */
 .layout { display: flex; min-height: 100vh; }
-.sidebar { width: 200px; background: #1d2b3a; color: #fff; padding-top: 16px; flex-shrink: 0; }
-.sidebar .logo { text-align: center; font-weight: 700; padding: 12px 0 20px; letter-spacing: 1px; }
-.menu-item { padding: 13px 22px; cursor: pointer; color: #b8c4cf; font-size: 14px; }
-.menu-item:hover { background: #27394d; color: #fff; }
-.menu-item.active { background: #1565C0; color: #fff; }
-.main { flex: 1; padding: 20px 24px; overflow-x: auto; }
-.toolbar { margin-bottom: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.pager { margin-top: 12px; }
+.sidebar {
+  width: 208px; flex-shrink: 0; color: #fff; padding-top: 18px;
+  background: linear-gradient(180deg, #123322 0%, #0E2719 100%);
+}
+.sidebar .logo {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-weight: 700; padding: 8px 0 22px; letter-spacing: 1px; font-size: 14px;
+}
+.sidebar .logo i {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  display: inline-block;
+}
+.menu-item {
+  margin: 4px 12px; padding: 12px 16px; border-radius: 10px;
+  cursor: pointer; color: #9FB5A6; font-size: 14px; transition: all .18s;
+}
+.menu-item:hover { background: rgba(255, 255, 255, .07); color: #fff; }
+.menu-item.active {
+  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  color: #fff; font-weight: 600;
+  box-shadow: 0 8px 18px rgba(22, 163, 74, .35);
+}
+.menu-item.logout { margin-top: 18px; color: #8AA294; }
+
+.main { flex: 1; min-width: 0; padding: 22px 26px; overflow-x: auto; }
+.toolbar { margin-bottom: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+/* 工具栏内的表单元件不参与伸缩：Element Plus 的 .el-input__wrapper 自带 flex-grow:1，
+   而日期选择器根节点本身就是 .el-input__wrapper，放进 flex 工具栏会被拉满整行 */
+.toolbar > .el-date-editor, .toolbar > .el-select, .toolbar > .el-input { flex: 0 0 auto; }
+.toolbar > .el-date-editor { width: 350px; }
+.pager { margin-top: 14px; display: flex; justify-content: flex-end; }
+
+/* 表格：更轻的表头底色 + 柔和投影 */
+.main .el-table { border-radius: 12px; }
+.main .el-table th.el-table__cell { background: #F4F8F4 !important; color: #4B5F52; font-weight: 600; }
+.main .el-table--border, .main .el-table--border .el-table__cell { border-color: #EDF3EE; }
 </style>
 </head>
 <body>
 <div id="app">
   <!-- 登录 -->
-  <div v-if="!token" class="login-box">
-    <h2 style="text-align:center;margin-top:0">健康饮食方案 · 管理后台</h2>
-    <el-form @submit.prevent>
-      <el-form-item><el-input v-model="login.username" placeholder="用户名" /></el-form-item>
-      <el-form-item><el-input v-model="login.password" type="password" placeholder="密码" show-password /></el-form-item>
-      <el-button type="primary" style="width:100%" :loading="login.loading" @click="doLogin">登 录</el-button>
-    </el-form>
+  <div v-if="!token" class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">健</div>
+      <h2 class="login-title">健康饮食方案 · 管理后台</h2>
+      <p class="login-sub">CONTENT MANAGEMENT</p>
+      <el-form @submit.prevent>
+        <el-form-item><el-input v-model="login.username" placeholder="用户名" size="large"></el-input></el-form-item>
+        <el-form-item><el-input v-model="login.password" type="password" placeholder="密码" size="large" show-password @keyup.enter="doLogin"></el-input></el-form-item>
+        <el-button type="primary" size="large" style="width:100%" :loading="login.loading" @click="doLogin">登 录</el-button>
+      </el-form>
+    </div>
   </div>
 
   <!-- 主界面 -->
   <div v-else class="layout">
     <div class="sidebar">
-      <div class="logo">均衡抗炎 · 后台</div>
+      <div class="logo"><i></i>健康饮食方案 · 后台</div>
       <div v-for="m in menus" :key="m.key" class="menu-item" :class="{active: view===m.key}" @click="view=m.key">{{ m.label }}</div>
-      <div class="menu-item" @click="logout">退出登录</div>
+      <div class="menu-item logout" @click="logout">退出登录</div>
     </div>
     <div class="main">
 
@@ -56,10 +129,10 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
 
         <!-- 层1：方案列表 -->
         <el-table v-if="!planNav.stage" :data="plans" border>
-          <el-table-column prop="id" label="ID" width="60"/>
-          <el-table-column prop="name" label="方案名"/>
-          <el-table-column prop="intro" label="简介" show-overflow-tooltip/>
-          <el-table-column prop="sort" label="排序" width="70"/>
+          <el-table-column prop="id" label="ID" width="60"></el-table-column>
+          <el-table-column prop="name" label="方案名"></el-table-column>
+          <el-table-column prop="intro" label="简介" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="sort" label="排序" width="70"></el-table-column>
           <el-table-column label="状态" width="90">
             <template #default="{row}"><el-tag :type="row.status===1?'success':'info'">{{ ['草稿','上线','下线'][row.status] }}</el-tag></template>
           </el-table-column>
@@ -76,9 +149,9 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
         <template v-else-if="!planNav.week">
           <div class="toolbar"><el-button type="primary" @click="openStage()">新建阶段</el-button><el-button @click="backToPlans">‹ 返回方案</el-button></div>
           <el-table :data="stages" border>
-            <el-table-column prop="name" label="阶段名" width="140"/>
-            <el-table-column prop="theme" label="主题"/>
-            <el-table-column prop="sort" label="排序" width="70"/>
+            <el-table-column prop="name" label="阶段名" width="140"></el-table-column>
+            <el-table-column prop="theme" label="主题"></el-table-column>
+            <el-table-column prop="sort" label="排序" width="70"></el-table-column>
             <el-table-column label="操作" width="220">
               <template #default="{row}">
                 <el-button size="small" @click="openStage(row)">编辑</el-button>
@@ -93,9 +166,9 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
         <template v-else-if="!planNav.day">
           <div class="toolbar"><el-button type="primary" @click="openWeek()">新建周</el-button><el-button @click="backToStages">‹ 返回阶段</el-button></div>
           <el-table :data="weeks" border>
-            <el-table-column prop="label" label="周标签" width="110"/>
-            <el-table-column prop="theme" label="周主题"/>
-            <el-table-column prop="sort" label="排序" width="70"/>
+            <el-table-column prop="label" label="周标签" width="110"></el-table-column>
+            <el-table-column prop="theme" label="周主题"></el-table-column>
+            <el-table-column prop="sort" label="排序" width="70"></el-table-column>
             <el-table-column label="操作" width="220">
               <template #default="{row}">
                 <el-button size="small" @click="openWeek(row)">编辑</el-button>
@@ -113,7 +186,7 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
             <el-button @click="backToWeeks">‹ 返回周</el-button>
           </div>
           <el-table :data="days" border>
-            <el-table-column prop="dayNo" label="天" width="70"/>
+            <el-table-column prop="dayNo" label="天" width="70"></el-table-column>
             <el-table-column label="三餐及菜品槽位">
               <template #default="{row}">
                 <div v-for="m in row.mealSlots" :key="m.id" style="margin-bottom:6px">
@@ -134,16 +207,16 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
       <!-- 菜品管理 -->
       <div v-if="view==='dishes'">
         <div class="toolbar">
-          <el-input v-model="dishKw" placeholder="关键字" style="width:180px" clearable @keyup.enter="loadDishes"/>
+          <el-input v-model="dishKw" placeholder="关键字" style="width:180px" clearable @keyup.enter="loadDishes"></el-input>
           <el-button type="primary" @click="loadDishes">搜索</el-button>
           <el-button @click="openDish()">新建菜品</el-button>
         </div>
         <el-table :data="dishes" border>
-          <el-table-column prop="id" label="ID" width="60"/>
-          <el-table-column prop="name" label="菜名" width="140"/>
-          <el-table-column prop="subtitle" label="副标题" width="140" show-overflow-tooltip/>
-          <el-table-column prop="category" label="分类" width="90"/>
-          <el-table-column prop="ingredientsJson" label="食材JSON" show-overflow-tooltip/>
+          <el-table-column prop="id" label="ID" width="60"></el-table-column>
+          <el-table-column prop="name" label="菜名" width="140"></el-table-column>
+          <el-table-column prop="subtitle" label="副标题" width="140" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="category" label="分类" width="90"></el-table-column>
+          <el-table-column prop="ingredientsJson" label="食材JSON" show-overflow-tooltip></el-table-column>
           <el-table-column label="状态" width="90">
             <template #default="{row}"><el-tag :type="row.status===1?'success':'info'">{{ ['草稿','已发布','下架'][row.status] }}</el-tag></template>
           </el-table-column>
@@ -160,8 +233,8 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
       <div v-if="view==='groups'">
         <div class="toolbar"><el-button type="primary" @click="openGroup()">新建候选组</el-button><el-button @click="loadGroups">刷新</el-button></div>
         <el-table :data="groups" border>
-          <el-table-column prop="id" label="ID" width="60"/>
-          <el-table-column prop="name" label="组名" width="160"/>
+          <el-table-column prop="id" label="ID" width="60"></el-table-column>
+          <el-table-column prop="name" label="组名" width="160"></el-table-column>
           <el-table-column label="成员菜品">
             <template #default="{row}"><el-tag v-for="i in row.items" :key="i.id" size="small" style="margin-right:4px">{{ dishName(i.dishId) }}</el-tag></template>
           </el-table-column>
@@ -178,16 +251,16 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
       <div v-if="view==='blocks'">
         <div class="toolbar">
           <el-select v-model="blockType" style="width:120px" @change="loadBlocks">
-            <el-option label="banner" value="banner"/><el-option label="资讯" value="article"/><el-option label="视频" value="video"/>
+            <el-option label="banner" value="banner"></el-option><el-option label="资讯" value="article"></el-option><el-option label="视频" value="video"></el-option>
           </el-select>
           <el-button type="primary" @click="openBlock()">新建</el-button>
         </div>
         <el-table :data="blocks" border>
-          <el-table-column prop="id" label="ID" width="60"/>
-          <el-table-column prop="title" label="标题"/>
-          <el-table-column prop="image" label="图片" show-overflow-tooltip/>
-          <el-table-column prop="url" label="链接" show-overflow-tooltip/>
-          <el-table-column prop="sort" label="排序" width="70"/>
+          <el-table-column prop="id" label="ID" width="60"></el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="image" label="图片" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="url" label="链接" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="sort" label="排序" width="70"></el-table-column>
           <el-table-column label="启用" width="70"><template #default="{row}">{{ row.enabled ? '是' : '否' }}</template></el-table-column>
           <el-table-column label="操作" width="140">
             <template #default="{row}">
@@ -201,19 +274,19 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
       <!-- 统计 -->
       <div v-if="view==='stats'">
         <el-row :gutter="16" style="margin-bottom:16px">
-          <el-col :span="8"><el-card><el-statistic title="注册用户" :value="overview.users || 0"/></el-card></el-col>
-          <el-col :span="8"><el-card><el-statistic title="打卡总人次" :value="overview.totalCheckins || 0"/></el-card></el-col>
-          <el-col :span="8"><el-card><el-statistic title="今日打卡人次" :value="overview.todayCheckins || 0"/></el-card></el-col>
+          <el-col :span="8"><el-card><el-statistic title="注册用户" :value="overview.users || 0"></el-statistic></el-card></el-col>
+          <el-col :span="8"><el-card><el-statistic title="打卡总人次" :value="overview.totalCheckins || 0"></el-statistic></el-card></el-col>
+          <el-col :span="8"><el-card><el-statistic title="今日打卡人次" :value="overview.todayCheckins || 0"></el-statistic></el-card></el-col>
         </el-row>
         <div class="toolbar">
-          <el-date-picker v-model="statRange" type="daterange" value-format="YYYY-MM-DD" start-placeholder="开始" end-placeholder="结束" @change="loadCheckinStats"/>
+          <el-date-picker v-model="statRange" type="daterange" value-format="YYYY-MM-DD" start-placeholder="开始" end-placeholder="结束" @change="loadCheckinStats"></el-date-picker>
           <el-button @click="exportStats">导出 CSV</el-button>
         </div>
         <el-table :data="checkinStats" border>
-          <el-table-column prop="date" label="日期" width="120"/>
-          <el-table-column prop="checkins" label="打卡人次"/>
-          <el-table-column prop="users" label="打卡人数"/>
-          <el-table-column prop="rate" label="打卡率(%)"/>
+          <el-table-column prop="date" label="日期" width="120"></el-table-column>
+          <el-table-column prop="checkins" label="打卡人次"></el-table-column>
+          <el-table-column prop="users" label="打卡人数"></el-table-column>
+          <el-table-column prop="rate" label="打卡率(%)"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -223,69 +296,69 @@ body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f7f
   <el-dialog v-model="dlg.show" :title="dlg.title" width="640px">
     <el-form label-width="90px">
       <template v-if="dlg.type==='plan'">
-        <el-form-item label="方案名"><el-input v-model="dlg.data.name"/></el-form-item>
-        <el-form-item label="简介"><el-input v-model="dlg.data.intro" type="textarea"/></el-form-item>
+        <el-form-item label="方案名"><el-input v-model="dlg.data.name"></el-input></el-form-item>
+        <el-form-item label="简介"><el-input v-model="dlg.data.intro" type="textarea"></el-input></el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"/><el-option label="上线" :value="1"/><el-option label="下线" :value="2"/></el-select>
+          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"></el-option><el-option label="上线" :value="1"></el-option><el-option label="下线" :value="2"></el-option></el-select>
         </el-form-item>
-        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"></el-input-number></el-form-item>
       </template>
       <template v-else-if="dlg.type==='stage'">
-        <el-form-item label="阶段名"><el-input v-model="dlg.data.name"/></el-form-item>
-        <el-form-item label="主题"><el-input v-model="dlg.data.theme"/></el-form-item>
-        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
-        <el-form-item label="详情富文本"><el-input v-model="dlg.data.detailRichText" type="textarea" :rows="4"/></el-form-item>
+        <el-form-item label="阶段名"><el-input v-model="dlg.data.name"></el-input></el-form-item>
+        <el-form-item label="主题"><el-input v-model="dlg.data.theme"></el-input></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"></el-input-number></el-form-item>
+        <el-form-item label="详情富文本"><el-input v-model="dlg.data.detailRichText" type="textarea" :rows="4"></el-input></el-form-item>
       </template>
       <template v-else-if="dlg.type==='week'">
-        <el-form-item label="周标签"><el-input v-model="dlg.data.label" placeholder="第1周"/></el-form-item>
-        <el-form-item label="周主题"><el-input v-model="dlg.data.theme"/></el-form-item>
-        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="周标签"><el-input v-model="dlg.data.label" placeholder="第1周"></el-input></el-form-item>
+        <el-form-item label="周主题"><el-input v-model="dlg.data.theme"></el-input></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"></el-input-number></el-form-item>
         <el-form-item label="背景图">
           <input type="file" @change="e => upload(e, v => dlg.data.coverImage = v)"/>
-          <el-input v-model="dlg.data.coverImage" placeholder="或直接填图片URL"/>
+          <el-input v-model="dlg.data.coverImage" placeholder="或直接填图片URL"></el-input>
         </el-form-item>
       </template>
       <template v-else-if="dlg.type==='dish'">
-        <el-form-item label="菜名"><el-input v-model="dlg.data.name"/></el-form-item>
-        <el-form-item label="副标题"><el-input v-model="dlg.data.subtitle"/></el-form-item>
-        <el-form-item label="分类"><el-input v-model="dlg.data.category" placeholder="主食/荤菜/素菜/汤品"/></el-form-item>
-        <el-form-item label="图片JSON"><el-input v-model="dlg.data.imagesJson" type="textarea" :rows="2" placeholder='["http://..."]'/></el-form-item>
-        <el-form-item label="食材JSON"><el-input v-model="dlg.data.ingredientsJson" type="textarea" :rows="3" placeholder='[{"name":"黑米","amount":"20g"}]'/></el-form-item>
-        <el-form-item label="步骤JSON"><el-input v-model="dlg.data.stepsJson" type="textarea" :rows="3" placeholder='[{"text":"淘洗黑米"}]'/></el-form-item>
+        <el-form-item label="菜名"><el-input v-model="dlg.data.name"></el-input></el-form-item>
+        <el-form-item label="副标题"><el-input v-model="dlg.data.subtitle"></el-input></el-form-item>
+        <el-form-item label="分类"><el-input v-model="dlg.data.category" placeholder="主食/荤菜/素菜/汤品"></el-input></el-form-item>
+        <el-form-item label="图片JSON"><el-input v-model="dlg.data.imagesJson" type="textarea" :rows="2" placeholder='["http://..."]'></el-input></el-form-item>
+        <el-form-item label="食材JSON"><el-input v-model="dlg.data.ingredientsJson" type="textarea" :rows="3" placeholder='[{"name":"黑米","amount":"20g"}]'></el-input></el-form-item>
+        <el-form-item label="步骤JSON"><el-input v-model="dlg.data.stepsJson" type="textarea" :rows="3" placeholder='[{"text":"淘洗黑米"}]'></el-input></el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"/><el-option label="已发布" :value="1"/><el-option label="下架" :value="2"/></el-select>
+          <el-select v-model="dlg.data.status"><el-option label="草稿" :value="0"></el-option><el-option label="已发布" :value="1"></el-option><el-option label="下架" :value="2"></el-option></el-select>
         </el-form-item>
       </template>
       <template v-else-if="dlg.type==='group'">
-        <el-form-item label="组名"><el-input v-model="dlg.data.name"/></el-form-item>
+        <el-form-item label="组名"><el-input v-model="dlg.data.name"></el-input></el-form-item>
         <el-form-item label="成员菜品ID">
           <el-select v-model="dlg.dishIds" multiple filterable style="width:100%">
-            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"/>
+            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"></el-option>
           </el-select>
         </el-form-item>
       </template>
       <template v-else-if="dlg.type==='block'">
-        <el-form-item label="标题"><el-input v-model="dlg.data.title"/></el-form-item>
+        <el-form-item label="标题"><el-input v-model="dlg.data.title"></el-input></el-form-item>
         <el-form-item label="图片">
           <input type="file" @change="e => upload(e, v => dlg.data.image = v)"/>
-          <el-input v-model="dlg.data.image"/>
+          <el-input v-model="dlg.data.image"></el-input>
         </el-form-item>
-        <el-form-item label="链接"><el-input v-model="dlg.data.url"/></el-form-item>
-        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
-        <el-form-item label="启用"><el-switch v-model="dlg.data.enabled"/></el-form-item>
+        <el-form-item label="链接"><el-input v-model="dlg.data.url"></el-input></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"></el-input-number></el-form-item>
+        <el-form-item label="启用"><el-switch v-model="dlg.data.enabled"></el-switch></el-form-item>
       </template>
       <template v-else-if="dlg.type==='slotitem'">
         <el-form-item label="菜品">
           <el-select v-model="dlg.data.dishId" filterable style="width:100%">
-            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"/>
+            <el-option v-for="d in dishes" :key="d.id" :label="d.id + ' ' + d.name" :value="d.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="候选组">
           <el-select v-model="dlg.data.candidateGroupId" clearable style="width:100%">
-            <el-option v-for="g in groups" :key="g.id" :label="g.id + ' ' + g.name" :value="g.id"/>
+            <el-option v-for="g in groups" :key="g.id" :label="g.id + ' ' + g.name" :value="g.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"/></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="dlg.data.sort" :min="0"></el-input-number></el-form-item>
       </template>
     </el-form>
     <template #footer>
