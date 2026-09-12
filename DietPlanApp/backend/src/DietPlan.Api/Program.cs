@@ -12,7 +12,7 @@ using DietPlan.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------- 真机预览/局域网联调：监听所有网卡，使手机能访问本机后端（默认只听 localhost） ----------
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+builder.WebHost.UseUrls("http://0.0.0.0:24661");
 
 // ---------- EF Core：默认 SQL Server；Database:Provider=InMemory 供本地冒烟/E2E（无库环境） ----------
 var dbProvider = builder.Configuration["Database:Provider"] ?? "SqlServer";

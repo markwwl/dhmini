@@ -46,11 +46,11 @@ GET  /api/content/blocks?type=... → ContentController（首页 banner / 视频
    # 进入 Api 目录
    cd DietPlanApp/backend/src/DietPlan.Api
    # InMemory 模式（本机无 SQL Server 也能跑）
-   set ASPNETCORE_URLS=http://localhost:5000
+   set ASPNETCORE_URLS=http://localhost:24661
    set Database__Provider=InMemory
    dotnet run
    ```
-   验证：浏览器开 `http://localhost:5000/swagger` 能看到全部接口即 OK
+   验证：浏览器开 `http://localhost:24661/swagger` 能看到全部接口即 OK
 4. **导入项目**：微信开发者工具 → 导入项目 → 目录选 `miniprogram` → AppID 填你自己的
    → 勾选「不校验合法域名/TLS」（project.config.json 里 `urlCheck:false` 已设，但真机预览仍需手动勾）
 
@@ -58,11 +58,11 @@ GET  /api/content/blocks?type=... → ContentController（首页 banner / 视频
 
 ## 2. 联调地址（关键，很多人卡这）
 
-- **模拟器（电脑预览）**：`utils/request.js` 的 `BASE = http://localhost:5000` 直连本机后端 ✅
+- **模拟器（电脑预览）**：`utils/request.js` 的 `BASE = http://localhost:24661` 直连本机后端 ✅
   推荐先用模拟器联调，最快最稳。
 - **真机预览（手机扫码）**：手机上的 `localhost` 指手机自身，连不上后端。两种解法：
-  - 把 `request.js` 的 `BASE` 改成电脑局域网 IP，如 `http://192.168.1.x:5000`；
-    后端启动时绑定 `ASPNETCORE_URLS=http://0.0.0.0:5000`（默认只绑 localhost，真机访问不到）；
+  - 把 `request.js` 的 `BASE` 改成电脑局域网 IP，如 `http://192.168.1.x:24661`；
+    后端启动时绑定 `ASPNETCORE_URLS=http://0.0.0.0:24661`（默认只绑 localhost，真机访问不到）；
   - 或部署公网 https 域名，并在微信公众平台配置 request 合法域名。
 
 ---
@@ -89,7 +89,7 @@ GET  /api/content/blocks?type=... → ContentController（首页 banner / 视频
 
 ## 4. 配套后台维护端（改内容实时生效）
 
-浏览器开 `http://localhost:5000/admin/index.html`（初始 `admin/admin123`）。
+浏览器开 `http://localhost:24661/admin/index.html`（初始 `admin/admin123`）。
 在后台配方案树 / 菜品 / 候选组 / 内容块，小程序刷新即生效。
 （InMemory 模式下重启后端会重置数据；接 SQL Server 后持久化。）
 

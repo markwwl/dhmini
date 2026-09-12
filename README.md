@@ -19,7 +19,7 @@
 ```
 DietPlanApp/
 ├── backend/                # ASP.NET Core 8 后端（Clean Architecture）
-│   └── src/DietPlan.Api/   # 启动工程（监听 0.0.0.0:5000）
+│   └── src/DietPlan.Api/   # 启动工程（监听 0.0.0.0:24661）
 │       └── wwwroot/admin/  # 管理后台 SPA（Vue3 + Element Plus CDN）
 ├── miniprogram/            # 微信原生小程序（用微信开发者工具导入此目录）
 └── tests/                  # xUnit 单元测试
@@ -57,14 +57,14 @@ cp appsettings.example.json DietPlanApp/backend/src/DietPlan.Api/appsettings.jso
 
 ```bash
 cd DietPlanApp/backend/src/DietPlan.Api
-dotnet run                      # 默认监听 http://0.0.0.0:5000
+dotnet run                      # 默认监听 http://0.0.0.0:24661
 # 本地无 SQL Server 时，用 InMemory 跑：
 # set Database:Provider=InMemory && dotnet run
 ```
 
-- Swagger 文档：`http://localhost:5000/swagger`
-- 管理后台：`http://localhost:5000/admin/`
-- 图片直出：`http://localhost:5000/uploads/...`
+- Swagger 文档：`http://localhost:24661/swagger`
+- 管理后台：`http://localhost:24661/admin/`
+- 图片直出：`http://localhost:24661/uploads/...`
 
 > 首次启动会自动建库并植入后台账号 **admin / admin123**（上线前务必修改）。
 
@@ -72,15 +72,15 @@ dotnet run                      # 默认监听 http://0.0.0.0:5000
 
 1. 微信开发者工具 → 导入项目 → 目录选 `DietPlanApp/miniprogram`
 2. `project.config.json` 的 `appid` 已是真实 AppID（如为占位请改为你自己的）
-3. 模拟器默认 `urlCheck:false`，可直接联本地 `http://localhost:5000`
+3. 模拟器默认 `urlCheck:false`，可直接联本地 `http://localhost:24661`
 
 ### 4. 真机联调
 
 手机无法通过 `localhost` 访问你电脑，需三步：
 
-1. `miniprogram/utils/request.js` 的 `BASE` 改为电脑局域网 IP，如 `http://192.168.3.100:5000`
-2. 后端已 `UseUrls("http://0.0.0.0:5000")` 监听所有网卡（程序内已配，无需改动）
-3. 开发者工具真机预览时勾选「不校验合法域名 / TLS」，并在 Windows 防火墙放行 TCP 5000
+1. `miniprogram/utils/request.js` 的 `BASE` 改为电脑局域网 IP，如 `http://192.168.3.100:24661`
+2. 后端已 `UseUrls("http://0.0.0.0:24661")` 监听所有网卡（程序内已配，无需改动）
+3. 开发者工具真机预览时勾选「不校验合法域名 / TLS」，并在 Windows 防火墙放行 TCP 24661
 
 ## 运行测试
 
@@ -99,4 +99,4 @@ dotnet test                     # 19 个 xUnit 单元用例（InMemory 提供）
 
 ## 部署说明
 
-Web 发布：`dotnet publish -c Release`，将 `wwwroot/admin` 一并产出即可托管管理后台。反向代理（nginx 等）将 `/api` 转发到后端 5000 端口。
+Web 发布：`dotnet publish -c Release`，将 `wwwroot/admin` 一并产出即可托管管理后台。反向代理（nginx 等）将 `/api` 转发到后端 24661 端口。

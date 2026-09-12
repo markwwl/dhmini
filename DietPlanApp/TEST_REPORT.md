@@ -16,7 +16,7 @@
 | .NET SDK | 10.0.400（目标框架 net8.0，目标包自动解析，符合需求文档） |
 | Node | v22.22.2 / npm 10.9.7 |
 | 数据库 | 单测：EF Core InMemory；E2E：`Database:Provider=InMemory`；生产：SQL Server（连接串可配） |
-| API 启动 | `http://localhost:5000`，Swagger 已启用（Development） |
+| API 启动 | `http://localhost:24661`，Swagger 已启用（Development） |
 
 ## 二、编译结果
 
@@ -74,7 +74,7 @@
 1. **数据库**：本机无 SQL Server，自动化验证用 InMemory；接生产库仅需在 `appsettings.json` 配好连接串（默认 LocalDB），首次启动自动建库+种子 admin/admin123（务必改密）。
 2. **微信登录**：未配置 `Wx:AppId/Secret` 时为确定性 stub（`dev_{code}`），配置后自动走真实 code2Session。
 3. **小程序**：纯源码交付，微信开发者工具导入 `miniprogram/` 目录即可预览；`utils/request.js` 的 BASE 需指向后端地址，上线前需在小程序后台配置合法域名。
-4. **管理后台**：CDN 版 Vue3 + Element Plus（免编译），API 启动后访问 `http://localhost:5000/admin/index.html`；初始账号 admin / admin123。
+4. **管理后台**：CDN 版 Vue3 + Element Plus（免编译），API 启动后访问 `http://localhost:24661/admin/index.html`；初始账号 admin / admin123。
 
 ## 八、交付清单
 
@@ -87,4 +87,4 @@
 | 小程序（8 页面四级架构） | `DietPlanApp/miniprogram/` | ✅ 源码完成（开发者工具预览） |
 | 需求文档 | `DietPlanApp/../../output/20260911-dietplan-reqdoc/stage3/*.docx` | ✅ V1.0 |
 
-**运行方式**：`cd DietPlanApp/backend/src/DietPlan.Api && dotnet run` → API:5000 / Swagger:5000/swagger / 后台:5000/admin/index.html
+**运行方式**：`cd DietPlanApp/backend/src/DietPlan.Api && dotnet run` → API:24661 / Swagger:24661/swagger / 后台:24661/admin/index.html

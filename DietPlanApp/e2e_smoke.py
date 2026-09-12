@@ -3,7 +3,7 @@
 import json
 import urllib.request
 
-BASE = "http://localhost:5000"
+BASE = "http://localhost:24661"
 ok_count = 0
 fail_count = 0
 results = []
