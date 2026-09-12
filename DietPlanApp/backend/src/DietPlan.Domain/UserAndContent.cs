@@ -31,7 +31,7 @@ public class CheckInRecord
     /// <summary>用户 Id</summary>
     public int UserId { get; set; }
 
-    /// <summary>打卡日期（自然日）</summary>
+    /// <summary>实际打卡自然日（用于近30天日历 / 连续打卡统计；计划天身份由 WeekId+DayNo 表达，与真实日期解耦以支持补打卡）</summary>
     public DateOnly Date { get; set; }
 
     /// <summary>方案 Id</summary>
@@ -79,6 +79,9 @@ public class ContentBlock
 
     /// <summary>是否启用</summary>
     public bool Enabled { get; set; } = true;
+
+    /// <summary>是否为上新内容（视频秀角标 / 资讯「上新」标记），由后台配置</summary>
+    public bool IsNew { get; set; }
 }
 
 /// <summary>管理后台账号</summary>

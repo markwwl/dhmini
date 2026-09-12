@@ -84,11 +84,11 @@ public class ContentService
             .Where(d => dishIds.Contains(d.Id))
             .ToDictionaryAsync(d => d.Id);
 
-        // 当日打卡集合（真实自然日）
-        var today = DateOnly.FromDateTime(DateTime.Today);
+        // 已打卡菜品集合：按「计划天 + 菜品」维度判定（支持补打卡，与真实自然日解耦，
+        // 确保今天补打的历史计划天，次日再进入仍正确显示已打卡）
         var checkedDishIds = userId.HasValue
             ? await _db.CheckInRecords.AsNoTracking()
-                .Where(c => c.UserId == userId.Value && c.Date == today)
+                .Where(c => c.UserId == userId.Value && c.WeekId == weekId && c.DayNo == dayNo)
                 .Select(c => c.DishId)
                 .ToListAsync()
             : new List<int>();

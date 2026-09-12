@@ -248,6 +248,7 @@ public class AdminContentBlocksController : AdminControllerBase
         block.Url = input.Url;
         block.Sort = input.Sort;
         block.Enabled = input.Enabled;
+        block.IsNew = input.IsNew;
         await _db.SaveChangesAsync();
         return Ok(block);
     }

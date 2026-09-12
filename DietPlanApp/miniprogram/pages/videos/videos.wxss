@@ -1,4 +1,11 @@
-.vcard { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; overflow: hidden; }
+.vcard { background: #fff; border-radius: 16rpx; margin: 16rpx 24rpx; overflow: hidden; position: relative; }
 .vcover { width: 100%; height: 360rpx; background: #f0f2f5; }
 .vtitle { padding: 20rpx; font-weight: 600; }
+.badge-new {
+  position: absolute; top: 16rpx; right: 16rpx; z-index: 2;
+  background: #ff4d4f; color: #fff;
+  font-size: 22rpx; line-height: 1; padding: 8rpx 16rpx;
+  border-radius: 20rpx 20rpx 20rpx 4rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,.2);
+}
 .empty { text-align: center; color: #999; padding-top: 200rpx; }

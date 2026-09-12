@@ -16,4 +16,15 @@
   <button class="btn-primary" style="margin-top:24rpx">查看方案 ›</button>
 </view>
 
+<view class="card news" wx:if="{{news.length}}">
+  <view class="card-title">健康资讯</view>
+  <view wx:for="{{news}}" wx:key="id" class="news-item">
+    <image wx:if="{{item.image}}" class="news-img" src="{{item.image}}" mode="aspectFill" lazy-load/>
+    <view class="news-body">
+      <view class="news-title">{{item.title}}</view>
+      <view wx:if="{{item.url}}" class="news-link">查看详情 ›</view>
+    </view>
+  </view>
+</view>
+
 <view class="card" wx:else style="text-align:center;color:#999">暂无上线方案，请在后台配置</view>

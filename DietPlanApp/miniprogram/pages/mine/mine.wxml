@@ -1,7 +1,11 @@
+<!-- 个人信息：头像（chooseAvatar）+ 昵称（nickname input），本地存储 -->
 <view class="profile">
-  <view class="avatar">{{nickname[0] || '健'}}</view>
-  <view>
-    <view class="nick">{{nickname}}</view>
+  <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+    <image wx:if="{{avatar}}" class="avatar" src="{{avatar}}" mode="aspectFill"/>
+    <view wx:else class="avatar avatar-text">{{nickname[0] || '健'}}</view>
+  </button>
+  <view class="profile-info">
+    <input class="nick" type="nickname" placeholder="点击设置昵称" value="{{nickname}}" bindinput="onNicknameInput"/>
     <view class="sub">微信授权登录</view>
   </view>
 </view>
@@ -13,6 +17,22 @@
 <view class="stats" wx:else>
   <view class="stat"><view class="num">-</view><view class="lbl">累计打卡(天)</view></view>
   <view class="stat"><view class="num">-</view><view class="lbl">连续打卡(天)</view></view>
+</view>
+
+<!-- 收藏的菜品（需求 4.6） -->
+<view class="card">
+  <view class="card-title">收藏的菜品（{{favs.length}}）</view>
+  <view wx:if="{{favs.length}}">
+    <view class="fav" wx:for="{{favs}}" wx:key="id" data-id="{{item.id}}" bindtap="goFav">
+      <image class="fav-img" src="{{item.image}}" mode="aspectFill" wx:if="{{item.image}}"/>
+      <view class="fav-info">
+        <view class="fav-name">{{item.name}}</view>
+        <view class="fav-sub" wx:if="{{item.subtitle}}">{{item.subtitle}}</view>
+      </view>
+      <text class="fav-go">查看 ›</text>
+    </view>
+  </view>
+  <view wx:else class="empty-sm">还没有收藏，去菜品页点「喜欢」吧</view>
 </view>
 
 <view class="card" wx:if="{{summary && summary.calendar.length}}">

@@ -60,10 +60,12 @@ public class CheckinService
     /// <summary>插入打卡记录；重复打卡静默跳过（唯一索引兜底）。返回是否新插入。</summary>
     private async Task<bool> InsertCheckinAsync(int userId, PlanDay day, MealType mealType, int dishId)
     {
-        var today = DateOnly.FromDateTime(DateTime.Today);
+        // 去重按「计划天+菜品」维度（允许补打卡：历史天重复打卡视为已完成，不重复计入）
         var exists = await _db.CheckInRecords.AnyAsync(c =>
-            c.UserId == userId && c.Date == today && c.DishId == dishId);
+            c.UserId == userId && c.WeekId == day.WeekId && c.DayNo == day.DayNo && c.DishId == dishId);
         if (exists) return false;
+
+        var today = DateOnly.FromDateTime(DateTime.Today);
 
         _db.CheckInRecords.Add(new CheckInRecord
         {

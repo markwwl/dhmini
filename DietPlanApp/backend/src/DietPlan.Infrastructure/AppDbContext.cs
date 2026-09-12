@@ -57,9 +57,10 @@ public class AppDbContext : DbContext
         // openid 唯一，防重复注册
         modelBuilder.Entity<User>().HasIndex(u => u.OpenId).IsUnique();
 
-        // 同用户同日同菜只允许一条打卡
+        // 同用户同一计划天同一菜品只允许一条打卡（允许补打卡：身份与真实自然日解耦，
+        // 避免「同一天补打两个含相同菜品的计划天」被唯一约束误删）
         modelBuilder.Entity<CheckInRecord>()
-            .HasIndex(c => new { c.UserId, c.Date, c.DishId })
+            .HasIndex(c => new { c.UserId, c.WeekId, c.DayNo, c.DishId })
             .IsUnique();
 
         // 后台用户名唯一
