@@ -5,14 +5,14 @@
 
 page {
   /* —— 品牌色：清新自然绿 —— */
-  --c-primary:      #16A34A;
-  --c-primary-600:  #15803D;
-  --c-primary-300:  #6EE7A0;
-  --c-primary-100:  #DCFCE7;
-  --c-primary-50:   #EFFBF3;
-  --grad-primary:   linear-gradient(135deg, #3DDC84 0%, #16A34A 100%);
-  --grad-header:    linear-gradient(160deg, #1FA85C 0%, #12833F 100%);
-  --grad-primary-soft: linear-gradient(135deg, #EFFBF3 0%, #DCF6E6 100%);
+  --c-primary:      #646cff;
+  --c-primary-600:  #4a52d9;
+  --c-primary-300:  #a5abff;
+  --c-primary-100:  #e8e9ff;
+  --c-primary-50:   #f1f1ff;
+  --grad-primary:   linear-gradient(135deg, #646cff 0%, #2080f0 100%);
+  --grad-header:    linear-gradient(135deg, #646cff 0%, #2080f0 100%);
+  --grad-primary-soft: linear-gradient(135deg, #f1f1ff 0%, #e4e6ff 100%);
 
   /* —— 强调色：暖橙（食欲 / 提示）—— */
   --c-accent:       #FF7A45;
@@ -20,18 +20,24 @@ page {
   --c-accent-50:    #FFF3EC;
 
   /* —— 语义色 —— */
-  --c-danger:       #F5483B;
-  --c-warn:         #F5A524;
-  --c-info:         #3B82F6;
-  --c-info-50:      #EEF4FF;
+  --c-danger:       #f5222d;
+  --c-warn:         #faad14;
+  --c-info:         #2080f0;
+  --c-info-50:      #e8f1ff;
+  --c-success:      #52c41a;
+  --c-success-50:   #eaf7ec;
+  --c-success:      #52c41a;
+  --c-success-50:   #eaf7ec;
+  --c-success:      #52c41a;
+  --c-success-50:   #eaf7ec;
 
   /* —— 中性 —— */
-  --c-bg:     #F4F8F4;
+  --c-bg:     #f7fafc;
   --c-card:   #FFFFFF;
-  --c-text:   #14231A;
-  --c-text-2: #5C6B61;
-  --c-text-3: #98A69D;
-  --c-line:   #EDF3EE;
+  --c-text:   #1f1f1f;
+  --c-text-2: #5b6b7a;
+  --c-text-3: #86909c;
+  --c-line:   #edf0f5;
 
   /* —— 圆角 —— */
   --r-sm:   14rpx;
@@ -40,9 +46,9 @@ page {
   --r-pill: 999rpx;
 
   /* —— 阴影 —— */
-  --sh-1:       0 4rpx 16rpx rgba(20, 60, 35, .05);
-  --sh-2:       0 10rpx 30rpx rgba(20, 60, 35, .08);
-  --sh-primary: 0 12rpx 24rpx rgba(22, 163, 74, .26);
+  --sh-1:       0 4rpx 16rpx rgba(20, 40, 80, .06);
+  --sh-2:       0 10rpx 30rpx rgba(20, 40, 80, .10);
+  --sh-primary: 0 12rpx 24rpx rgba(100, 108, 255, .28);
 
   /* —— 页面水平留白 —— */
   --sp: 24rpx;
@@ -153,9 +159,9 @@ image { display: block; }
   border-radius: var(--r-pill);
   font-weight: 500;
 }
-.tag-green  { background: var(--c-primary-100); color: var(--c-primary-600); }
+.tag-green  { background: var(--c-success-50); color: var(--c-success); }
 .tag-orange { background: var(--c-accent-50);    color: var(--c-accent-600); }
-.tag-gray   { background: #F1F4F1;               color: var(--c-text-2); }
+.tag-gray   { background: #F2F3F5;               color: var(--c-text-2); }
 .tag-info   { background: var(--c-info-50);      color: var(--c-info); }
 
 /* 上新角标（视频 / 资讯） */
@@ -187,7 +193,7 @@ image { display: block; }
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-  background: var(--grad-primary-soft, linear-gradient(135deg, #EFFBF3, #DCF6E6));
+  background: var(--grad-primary-soft, linear-gradient(135deg, #f1f1ff, #e4e6ff));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,4 +221,4 @@ image { display: block; }
 .text-primary { color: var(--c-primary); }
 
 /* ============================ 图片占位背景 ============================ */
-.img-ph { background: linear-gradient(135deg, #F1F6F1, #E7F0E8); }
+.img-ph { background: linear-gradient(135deg, #f3f4ff, #e8ebff); }

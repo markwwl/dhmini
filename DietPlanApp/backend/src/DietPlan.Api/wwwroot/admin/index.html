@@ -10,51 +10,51 @@
 <script src="vendor/element-plus.full.min.js"></script>
 <script src="vendor/element-plus.zh-cn.min.js"></script>
 <style>
-/* 品牌主题：清新自然绿 —— 覆盖 Element Plus 主题变量 */
+/* 品牌主题：Soybean 靛蓝 —— 覆盖 Element Plus 主题变量 */
 :root {
-  --el-color-primary: #16A34A;
-  --el-color-primary-light-3: #5CBF80;
-  --el-color-primary-light-5: #8BD1A5;
-  --el-color-primary-light-7: #B9E3C9;
-  --el-color-primary-light-8: #D0EDDB;
-  --el-color-primary-light-9: #E8F6ED;
-  --el-color-primary-dark-2: #12823B;
-  --el-border-radius-base: 8px;
+  --el-color-primary: #646cff;
+  --el-color-primary-light-3: #7c86ff;
+  --el-color-primary-light-5: #a5abff;
+  --el-color-primary-light-7: #c7caff;
+  --el-color-primary-light-8: #dadfff;
+  --el-color-primary-light-9: #edefff;
+  --el-color-primary-dark-2: #4a52d9;
+  --el-border-radius-base: 6px;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-  background: #F4F8F4;
-  color: #14231A;
+  background: #f7fafc;
+  color: #1f1f1f;
 }
 
 /* ---------- 登录 ---------- */
 .login-wrap {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(160deg, #1FA85C 0%, #12833F 55%, #0E6B33 100%);
+  background: linear-gradient(135deg, #646cff 0%, #2080f0 100%);
 }
 .login-box {
   width: 380px; padding: 40px 36px;
   background: #fff; border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(8, 40, 22, .28);
+  box-shadow: 0 20px 60px rgba(18, 20, 55, .30);
 }
 .login-logo {
   width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px;
-  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  background: linear-gradient(135deg, #646cff, #2080f0);
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 26px; font-weight: 800;
-  box-shadow: 0 8px 20px rgba(22, 163, 74, .35);
+  box-shadow: 0 8px 20px rgba(100, 108, 255, .35);
 }
-.login-title { text-align: center; margin: 0 0 6px; font-size: 19px; font-weight: 700; color: #14231A; }
-.login-sub { text-align: center; margin: 0 0 26px; font-size: 12px; letter-spacing: 1px; color: #98A69D; }
+.login-title { text-align: center; margin: 0 0 6px; font-size: 19px; font-weight: 700; color: #1f1f1f; }
+.login-sub { text-align: center; margin: 0 0 26px; font-size: 12px; letter-spacing: 1px; color: #9aa0b0; }
 
 /* ---------- 布局 ---------- */
 .layout { display: flex; min-height: 100vh; }
 .sidebar {
   width: 208px; flex-shrink: 0; color: #fff; padding-top: 18px;
-  background: linear-gradient(180deg, #123322 0%, #0E2719 100%);
+  background: linear-gradient(180deg, #262a5e 0%, #171a3c 100%);
 }
 .sidebar .logo {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -62,20 +62,20 @@ body {
 }
 .sidebar .logo i {
   width: 26px; height: 26px; border-radius: 8px;
-  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  background: linear-gradient(135deg, #646cff, #2080f0);
   display: inline-block;
 }
 .menu-item {
   margin: 4px 12px; padding: 12px 16px; border-radius: 10px;
-  cursor: pointer; color: #9FB5A6; font-size: 14px; transition: all .18s;
+  cursor: pointer; color: #a8aed6; font-size: 14px; transition: all .18s;
 }
 .menu-item:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .menu-item.active {
-  background: linear-gradient(135deg, #3DDC84, #16A34A);
+  background: linear-gradient(135deg, #646cff, #2080f0);
   color: #fff; font-weight: 600;
-  box-shadow: 0 8px 18px rgba(22, 163, 74, .35);
+  box-shadow: 0 8px 18px rgba(100, 108, 255, .35);
 }
-.menu-item.logout { margin-top: 18px; color: #8AA294; }
+.menu-item.logout { margin-top: 18px; color: #8a90b8; }
 
 .main { flex: 1; min-width: 0; padding: 22px 26px; overflow-x: auto; }
 .toolbar { margin-bottom: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -87,8 +87,8 @@ body {
 
 /* 表格：更轻的表头底色 + 柔和投影 */
 .main .el-table { border-radius: 12px; }
-.main .el-table th.el-table__cell { background: #F4F8F4 !important; color: #4B5F52; font-weight: 600; }
-.main .el-table--border, .main .el-table--border .el-table__cell { border-color: #EDF3EE; }
+.main .el-table th.el-table__cell { background: #f7fafc !important; color: #4b5563; font-weight: 600; }
+.main .el-table--border, .main .el-table--border .el-table__cell { border-color: #eef1f6; }
 </style>
 </head>
 <body>

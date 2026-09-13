@@ -26,6 +26,8 @@ ip_tmp.txt
 # ===== 本地调试/验证产物（截图、无头浏览器脚本、预览页），不入库 =====
 output/dbg/
 output/admin-fix/
+output/doc-fix/
+output/**/*.png
 output/*.html
 output/*.png
 

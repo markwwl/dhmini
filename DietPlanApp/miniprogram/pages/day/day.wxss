@@ -57,8 +57,8 @@
 /* 早餐 / 午餐 / 晚餐 三色区分 */
 .meal-tag-1 { background: var(--c-accent-50); color: var(--c-accent-600); }
 .meal-tag-1 .meal-dot { background: var(--c-accent); }
-.meal-tag-2 { background: var(--c-primary-100); color: var(--c-primary-600); }
-.meal-tag-2 .meal-dot { background: var(--c-primary); }
+.meal-tag-2 { background: var(--c-success-50); color: var(--c-success); }
+.meal-tag-2 .meal-dot { background: var(--c-success); }
 .meal-tag-3 { background: var(--c-info-50); color: var(--c-info); }
 .meal-tag-3 .meal-dot { background: var(--c-info); }
 

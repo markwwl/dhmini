@@ -2,7 +2,7 @@
 """
 生成小程序 tabBar 图标（4 组 × 2 态）。
 图标风格：Material 填充式，4 倍尺寸绘制后 LANCZOS 缩到 81×81 抗锯齿。
-颜色与设计系统一致：未选中 = #98A69D（--c-text-3），选中 = #16A34A（--c-primary）。
+颜色与设计系统一致：未选中 = #98A69D（--c-text-3），选中 = #646cff（--c-primary）。
 运行：<venv>/Scripts/python.exe gen_tabbar_icons.py
 """
 import os
@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw
 S = 324            # 绘制尺寸（81 的 4 倍）
 OUT = 81           # 输出尺寸
 C_OFF = (152, 166, 157)   # #98A69D
-C_ON = (22, 163, 74)      # #16A34A
+C_ON = (100, 108, 255)   # #646cff
 W = 255            # 遮罩白
 K = 0              # 遮罩黑（挖空）
 
